@@ -1,4 +1,4 @@
-added in both
-added in new
-added in new, on the third line
-added in new, on the fourth line
+changed in new, 1st line
+changed in new, 2nd line
+changed in new, 3rd line
+changed in new, 4th line
