@@ -1,4 +1,1 @@
-changed in new, 1st line
-changed in new, 2nd line
-changed in new, 3rd line
-changed in new, 4th line
+b
