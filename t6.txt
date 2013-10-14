@@ -1,4 +1,4 @@
-added in both
-added in new
-added in new, on the third line
-added in new, on the fourth line
+changed first line in master.
+changed in master on the second line.
+changed in master on third line
+changed in master the fourth line.
