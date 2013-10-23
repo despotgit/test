@@ -117,8 +117,7 @@
 			format1.color=0xFFFFFF;
 
             points.defaultTextFormat=format1;
-			points.htmlText=(String)("<font style='font-size:4px'>  <b>  0VD  </b>  </font>");
-			//points.defaultTextFormat = new TextFormat("Arial", 5000);
+			points.htmlText=(String)("<font style='font-size:4px'>  <b>  0VD  </b>  </font>");			
 			trace("BOLD OR NOT "+format1.bold);
 			
 		}
