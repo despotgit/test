@@ -31,46 +31,35 @@
 				  cargo2_color=cargos[1];
 				  cargo3_color=cargos[2];
 				  
-				  trace("cargo1_color je"+cargo1_color);
-				  trace("cargo2_color je"+cargo2_color);
-				  trace("cargo3_color je"+cargo3_color);
-				  
-				
 				  if (cargo1_color==RED) 
 				  {
-					trace("cargo1_color je RED");
 					(Cargo)(getChildByName("cargo1_mc")).gotoAndStop("red"); 
 					red_cargos.push((Cargo)(getChildByName("cargo1_mc")));
 				  }
 				  else
 				  {
-					trace("cargo1_color je YELLOW");
 					(Cargo)(getChildByName("cargo1_mc")).gotoAndStop("yellow"); 
 					yellow_cargos.push((Cargo)(getChildByName("cargo1_mc")));
 				  }			
 				
 				  if (cargo2_color==RED) 
-				  {
-					trace("cargo2_color je RED");  
+				  { 
 					(Cargo)(getChildByName("cargo2_mc")).gotoAndStop("red"); 
 					red_cargos.push((Cargo)(getChildByName("cargo2_mc")));
 				  }
 				  else
 				  {
-					trace("cargo2_color je YELLOW");  
 					(Cargo)(getChildByName("cargo2_mc")).gotoAndStop("yellow"); 
 					yellow_cargos.push((Cargo)(getChildByName("cargo2_mc")));
 				  }
 				  
 				  if (cargo3_color==RED) 
 				  {
-					trace("cargo3_color je RED");  
 					(Cargo)(getChildByName("cargo3_mc")).gotoAndStop("red"); 
 					red_cargos.push((Cargo)(getChildByName("cargo3_mc")));
 				  }
 				  else
-				  {
-					trace("cargo3_color je YELLOW");  
+				  { 
 					(Cargo)(getChildByName("cargo3_mc")).gotoAndStop("yellow"); 
 					yellow_cargos.push((Cargo)(getChildByName("cargo3_mc")));
 				  }

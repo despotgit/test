@@ -2,6 +2,9 @@
 	import flash.events.MouseEvent;	
 	import flash.events.Event;
 	
+	import flash.text.TextField;
+	import flash.text.TextFormat;
+	
 	import com.greensock.*;
 	import com.greensock.easing.*;
 	
@@ -10,6 +13,7 @@
 	import flash.geom.Point;
 	import flash.geom.ColorTransform;
 	import flash.display.MovieClip;
+	import flash.text.TextField;
 	
 	
 	public class Main extends MovieClip
@@ -23,6 +27,9 @@
 		var boat1:BoatController;
 		var boat2:BoatController;
 		var tween_time:Number=0.3;		
+		
+		//Points textbox
+		var points:TextField;
 		
 		//boats' trajectory movieclips
 		var t1:MovieClip;
@@ -80,7 +87,7 @@
 			init_lower_coast();    //initialize lower coast	
 			init_docks();          //initialize docks
 			init_boats();          //initialize boats
-			//init_alert_circles;  //initialize alert circles			
+			init_points();         //initialize points	
 			
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
 			stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp); 		
@@ -98,6 +105,21 @@
 			bck.x=0;
 			bck.y=0;
 			addChildAt(bck,0);	
+			
+		}
+		
+		function init_points():void
+		{
+			points=(TextField)(getChildByName("txt_points"));			
+			var format1:TextFormat = new TextFormat();						
+			format1.bold=true;
+			format1.size=4;
+			format1.color=0xFFFFFF;
+
+            points.defaultTextFormat=format1;
+			points.htmlText=(String)("<font style='font-size:4px'>  <b>  0VD  </b>  </font>");
+			//points.defaultTextFormat = new TextFormat("Arial", 5000);
+			trace("BOLD OR NOT "+format1.bold);
 			
 		}
 		
@@ -122,8 +144,8 @@
 		private function init_lower_coast():void
 		{
 			 lower_coast = new LowerCoast();
-			 lower_coast.x = 576;
-			 lower_coast.y = 454;
+			 lower_coast.x = 585;
+			 lower_coast.y = 452;
 			 addChild(lower_coast);		
 			 setChildIndex(lower_coast,1);
 		}
@@ -227,7 +249,7 @@
 		}	
 		
 		function handleMouseDown(event:MouseEvent):void 
-		{
+		{   
 			var lineThickness:uint = 2; 
             var lineColor:uint = 0.5*0xffffff; 			
 			
@@ -422,9 +444,7 @@
 			for(var i:Number=0 ; i<len ; i++)
 			{
 				//color is either 0 or 1, let's return a random value here
-				var ccolor:Number = randomNumber(0,1);
-				trace("ccolor je: "+ccolor);
-				trace("!!")
+				var ccolor:Number = randomNumber(0,1);				
 				colors[i]=ccolor;				
 			}
 			
