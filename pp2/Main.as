@@ -19,7 +19,7 @@
 	public class Main extends MovieClip
 	{
 		var game_on:Boolean;
-		
+		 
 		var boat_controller:BoatController;
 		var navigated_boat:BoatController;
 		var boat_tween_length;  //this is the length of each boat tween
@@ -28,8 +28,9 @@
 		var boat2:BoatController;
 		var tween_time:Number=0.3;		
 		
-		//Points textbox
+		//Points textbox and points var
 		var points:TextField;
+		var points_number:Number;
 		
 		//boats' trajectory movieclips
 		var t1:MovieClip;
@@ -108,6 +109,7 @@
 			
 		}
 		
+		//Initialize points and points text field
 		function init_points():void
 		{
 			points=(TextField)(getChildByName("txt_points"));			
@@ -115,13 +117,22 @@
 			format1.bold=true;
 			format1.size=4;
 			format1.color=0xFFFFFF;
+			
+			points_number=0;
 
             points.defaultTextFormat=format1;
-			points.htmlText=(String)("<font style='font-size:4px'>  <b>  0VD  </b>  </font>");			
+			points.htmlText=(String)("<b>"+points_number+"</b>");			
 			trace("BOLD OR NOT "+format1.bold);
 			
 		}
 		
+		//Refresh points on screen
+		function refresh_points():void
+		{
+			points.htmlText=(String)("<b>"+points_number+"</b>");			
+		}
+		
+		//Initialize left coast on screen
 		private function init_left_coast():void
 		{
 			 left_coast = new LeftCoast();
@@ -131,6 +142,7 @@
 			 setChildIndex(left_coast,1);
 		}
 		
+		//Initialize upper coast on screen
 		private function init_upper_coast():void
 		{
 			 upper_coast = new UpperCoast();
@@ -140,6 +152,7 @@
 			 setChildIndex(upper_coast,1);
 		}
 		
+		//Initialize lower coast on screen
 		private function init_lower_coast():void
 		{
 			 lower_coast = new LowerCoast();
