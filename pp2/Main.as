@@ -162,6 +162,7 @@
 			 setChildIndex(lower_coast,1);
 		}
 		
+		//Initialize docks on screen
 		private function init_docks():void
 		{
 			//Setting docking/docked points and unloading/unloaded rotations for
@@ -206,6 +207,7 @@
 			
 		}				
 		
+		//Initialize boats on screen
 		function init_boats():void
 		{
 			//trace("test distance fje ,treba 5 da bude, ne 25: " + pp_maths.distance(new Point(0,0),new Point(3,4)));
