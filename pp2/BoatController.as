@@ -346,7 +346,8 @@
 												    2 ,												    
 												    { 
 													 alpha:0,													 
-		                                     		 ease:Linear.easeNone}													 
+		                                     		 ease:Linear.easeNone,
+													 onComplete:game.increment_and_refresh_points}													 
 													 ) );	
 						   
 						   

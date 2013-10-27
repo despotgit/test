@@ -22,7 +22,7 @@
 		 
 		var boat_controller:BoatController;
 		var navigated_boat:BoatController;
-		var boat_tween_length;  //this is the length of each boat tween
+		var boat_tween_length:Number=20;  //this is the length of each boat tween
 		//var timeline:TimelineLite;
 		var boat1:BoatController;
 		var boat2:BoatController;
@@ -92,8 +92,7 @@
 			
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
 			stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp); 		
-			//add
-			boat_tween_length=20;
+			
 			//timeline=new TimelineLite();	
 			
 			addEventListener(Event.ENTER_FRAME, checkCollisionsAndProximites);
@@ -122,14 +121,7 @@
 
             points.defaultTextFormat=format1;
 			points.htmlText=(String)("<b>"+points_number+"</b>");			
-			trace("BOLD OR NOT "+format1.bold);
-			
-		}
-		
-		//Refresh points on screen
-		function refresh_points():void
-		{
-			points.htmlText=(String)("<b>"+points_number+"</b>");			
+			trace("BOLD OR NOT "+format1.bold);			
 		}
 		
 		//Initialize left coast on screen
@@ -229,6 +221,7 @@
 			boat2.set_last_trajectory_point(250,250);						
 		}							
 		
+		//Checking collisions and proximities between all boats on screen
 		private function checkCollisionsAndProximites(ev:Event):void
 		{
 			//var newColorTransform:ColorTransform;
@@ -252,16 +245,13 @@
 				boat1.activateExplosion();
 				boat2.activateExplosion();
 				game_on=false;
-	   		}				
+	   		}							
 			
-			//Going into BoatController for now:
-			//check docks-boats collisions
-			//check if some boat colides with a dock then set the last_traj_point of the 
-			//boat to infinity(in order for it not to be able to set a new motion tween
-			//and set the new tween for it to go to the dock and also the subsequent tweens 
-			//for unloading the cargo
 		}	
 		
+		//Erasing trajectory and setting initial (which is actually last in the array of
+		//potential tweens) trajectory point and rotation for use in add_tween function
+		//later
 		function handleMouseDown(event:MouseEvent):void 
 		{   
 			var lineThickness:uint = 2; 
@@ -315,6 +305,7 @@
 			
 		}
 
+        //From here we propagate event to the boat and have it add an appropriate tween
 		function startDrawing(event:MouseEvent):void 
 		{   			
 		    //Don't allow navigation if boats already colided and game is already over
@@ -483,6 +474,26 @@
         {
            return Math.floor(Math.random() * (1+high-low)) + low;
         }
+		
+		//Refresh points on screen
+		function refresh_points():void
+		{
+			points.htmlText=(String)("<b>"+points_number+"</b>");			
+		}
+		
+		//Increment points variable
+		function increment_points():void
+		{
+			points_number++;
+		}
+		
+		//Do both above
+		function increment_and_refresh_points():void
+		{
+			increment_points();
+			refresh_points();
+			
+		}
 
 	}
 	
