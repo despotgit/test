@@ -54,6 +54,7 @@
 		var left_coast:LeftCoast;
 		var upper_coast:UpperCoast;
 		var lower_coast:LowerCoast;
+		var island_coast:IslandCoast;
 		
 		//boats......TODO
 		
@@ -86,6 +87,7 @@
 			init_left_coast();     //initialize left coast	
 			init_upper_coast();    //initialize upper coast
 			init_lower_coast();    //initialize lower coast	
+			init_island_coast();      //initialize island in the middle
 			init_docks();          //initialize docks
 			init_boats();          //initialize boats
 			init_points();         //initialize points	
@@ -152,6 +154,14 @@
 			 lower_coast.y = 452;
 			 addChild(lower_coast);		
 			 setChildIndex(lower_coast,1);
+		}
+		
+		//Initialize island
+		private function init_island_coast():void
+		{
+			island_coast = (IslandCoast)(getChildByName("island_mc"));
+			
+			
 		}
 		
 		//Initialize docks on screen
@@ -358,7 +368,8 @@
 			//so far testing only for one of the coasts
 			if(left_coast.hitTestPoint(p.x, p.y, true)||
 			   upper_coast.hitTestPoint(p.x, p.y, true)||
-			   lower_coast.hitTestPoint(p.x, p.y, true))
+			   lower_coast.hitTestPoint(p.x, p.y, true)||
+			   island_coast.hitTestPoint(p.x, p.y, true))
 			return true;
 			else return false;		
 			
@@ -425,6 +436,24 @@
 				  case boat2:
 				  {
 					t2.graphics.lineTo(mouseX,mouseY);   //trace("t2 drawn"); 			
+					break;
+				  };		
+			}		
+		}		
+		
+		//Delete the first drawn trajectory segment that is remaining
+		function delete_trajectory_segment():void
+		{
+			switch(navigated_boat)
+			{
+				  case boat1:
+				  {
+					//t1.graphics.lineTo(mouseX,mouseY);   //trace("t1 drawn");			
+					break;
+			 	  }
+				  case boat2:
+				  {
+					//t2.graphics.lineTo(mouseX,mouseY);   //trace("t2 drawn"); 			
 					break;
 				  };		
 			}		

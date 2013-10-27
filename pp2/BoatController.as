@@ -376,14 +376,28 @@
 				   }
 				   else  //regular trajectory segment
 				   {
-				   //trace("CHECK!");
-		           timeline.append(     new TweenLite(this , 
-												    time/20*game.boat_tween_length ,												    
-												    {x:par_x, 
-		   						                     y:par_y, 
-													 rotation:svs ,
+				     //trace("CHECK!");
+					 //TO DO: Insert a onComplete here to wipe the last trajectory segment
+					 //from the navigated boat
+		             timeline.append(     new TweenLite(this , 
+					  							    time/20*game.boat_tween_length ,												    
+					 							    {x:par_x, 
+		   			 			                     y:par_y, 
+					 								 rotation:svs ,
 		                                     		 ease:Linear.easeNone}													 
-													 ) );
+				     									 ) );
+					  
+					 //Next we will add a tween for prolonged movement of boat, after manual
+					 //navigation has been done
+					 timeline.append(     new TweenLite(this , 
+					  							    time/20*game.boat_tween_length ,												    
+					 							    {x:par_x, 
+		   			 			                     y:par_y, 
+					 								 rotation:svs ,
+		                                     		 ease:Linear.easeNone}													 
+				     									 ) );
+					 
+					  
 				   }
 			       set_last_trajectory_point(par_x, par_y);	
 				   game.draw_trajectory_segment(par_x, par_y);
@@ -454,6 +468,7 @@
 			
 		}
 		
+		//Delete the trajectory line in the BoatController
 		public function erase_trajectory_line():void
 		{
 			
