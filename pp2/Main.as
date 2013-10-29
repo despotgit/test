@@ -360,7 +360,7 @@
 		function handleMouseUp(event:MouseEvent):void 
 		{ 
   		   stage.removeEventListener(MouseEvent.MOUSE_MOVE,startDrawing); 
-		   
+		   navigated_boat.appendProlongedTween();
 		   navigated_boat=null;
 		   trace("mouse is upped");
 		} 

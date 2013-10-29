@@ -387,32 +387,31 @@
 		}
 		
 		//Append the prolonging tween based on last two trajectory points
-		public function appendProlongedTween(p1:Point, p2:Point):void
+		public function appendProlongedTween():void
 		{
 		  //Next, we will remove the boat's prolonging tween and then add 
 	      //a new prolonging tween(for prolonged movement of boat, after manual
 		  //navigation has been done, the boat should continue to move in that same
 		  //direction)
-		  p1=get_one_before_last_trajectory_point();
-		  p2=get_last_trajectory_point();		 
+		  var p1:Point=get_one_before_last_trajectory_point();
+		  var p2:Point=get_last_trajectory_point();		 
 		 
-		  var time:Number=game.tween_time;
-		  var ltp:Point=p1;
-		  //trace("ltp is:"+ltp.x+" , "+ltp.y);
+		  var time:Number=game.tween_time;		
 		 
 		  //Let's detach the old prolonged_tween here, so we can attach a new one
 		  var all:Array = timeline.getChildren();
 		  if(all.indexOf(this.prolonged_tween)!=-1)
 		  {
- 		   //trace("Prolonged tween je: "+this.prolonged_tween);
- 		   //trace("indexOf it is: "+all.indexOf(this.prolonged_tween));
+ 		    //trace("Prolonged tween je: "+this.prolonged_tween);
+ 		    //trace("indexOf it is: "+all.indexOf(this.prolonged_tween));
  			   
  		    timeline.remove(this.prolonged_tween);
  		    this.prolonged_tween=null;
 		   
 		  }
 		  else 
-		  {//trace("Prolonged tween je: "+this.prolonged_tween);
+		  {  
+		     //trace("Prolonged tween je: "+this.prolonged_tween);
 			 //trace("index is:" + all.indexOf(prolonged_tween)) 
 		  }
 		 
@@ -426,11 +425,7 @@
 					                   	      onComplete:done
 					 				         }													
 			 	     				        );
-		   
-		   //trace("New prolonged is: "+par_x+(par_x-ltp.x)*20+" , "+ 
-		   //			                par_y+(par_y-ltp.y)*20);
-					 
-	       //Let's attach a new prolonged tween here					
+		 		
 		   timeline.append(this.prolonged_tween);				
 			
 		}
