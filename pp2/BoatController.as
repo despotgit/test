@@ -387,6 +387,10 @@
 		}
 		
 		//Append the prolonging tween based on last two trajectory points
+		//TO DO 30.10.2013:
+		//videti ovde da se proverava da li treba da se pravi prolonged tween,
+		//jer u situaciji kada se samo klikne na brodic i pusti dugme misa,
+		//ne treba da se radi prolonged tween.
 		public function appendProlongedTween():void
 		{
 		  //Next, we will remove the boat's prolonging tween and then add 

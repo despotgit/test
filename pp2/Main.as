@@ -254,6 +254,7 @@
 	  		{				
 				boat1.activateExplosion();
 				boat2.activateExplosion();
+				
 				game_on=false;
 	   		}							
 			
@@ -284,7 +285,8 @@
 			}			
 			//trace("mouse koordi iz maina su:"  + mouseX + " i " + mouseY);
 			 
-			navigated_boat.set_last_trajectory_point(mouseX,mouseY);			
+			navigated_boat.set_last_trajectory_point(mouseX,mouseY);
+			navigated_boat.set_one_before_last_trajectory_point(null,null);
 			navigated_boat.set_last_trajectory_rotation(navigated_boat.rotation);
 			
 			stage.addEventListener(MouseEvent.MOUSE_MOVE,startDrawing);
@@ -360,7 +362,9 @@
 		function handleMouseUp(event:MouseEvent):void 
 		{ 
   		   stage.removeEventListener(MouseEvent.MOUSE_MOVE,startDrawing); 
+		   if(game_on)
 		   navigated_boat.appendProlongedTween();
+		   else trace("Navigacija nije dozvoljena vise.");
 		   navigated_boat=null;
 		   trace("mouse is upped");
 		} 
