@@ -360,7 +360,9 @@
 		function handleMouseUp(event:MouseEvent):void 
 		{ 
   		   stage.removeEventListener(MouseEvent.MOUSE_MOVE,startDrawing); 
+		   
 		   navigated_boat=null;
+		   trace("mouse is upped");
 		} 
 		
 		function test_coasts_hit(p:Point):Boolean
@@ -464,13 +466,11 @@
   		   graphics.clear(); 
 		}   
 
-        //this function returns a boar with random length and cargo on it
+        //this function returns a boat with random length and cargo on it
         function generate_random_boat():BoatController
 		{
 			var len:Number = randomNumber(2,4);
 			var boatie:BoatController;
-			
-			trace("len je: "+len);
 			
 			//let's generate new boat's cargos colors array
 			var colors:Array=new Array();
@@ -495,7 +495,6 @@
 			  boatie = new Cruiser(this, colors);		
 			}			
 			
-			trace("checked, returning object as a boat");
 			return boatie;					
 		}
 		

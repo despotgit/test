@@ -7,7 +7,7 @@
 		public function LowerCoast() 
 		{
 			// constructor code
-			trace ("entered LOWER COAST");		
+				
 		}
 	}
 	

@@ -43,13 +43,20 @@
 		var cargo3:Cargo;
 		var cargo4:Cargo;
 		
-		var all_cargos:Array;   //all cargos colors as numbers
+		var all_cargos:Array;   //all cargos colors as numbers		
 		
-        var motion_route:Array=new Array(); 
+		//This is the current prolonged motion that occurs when all the motion tweens
+		//for the boat are played out
+		var prolonged_tween:TweenLite;  
+		
+		//Timeline for the boat
 		var timeline:TimelineLite;      
 		var last_trajectory_point:Point;
+		var one_before_last_trajectory_point:Point;
 		var last_trajectory_rotation:Number;
+		var last_trajectory_tween_segment:TweenLite;
 		
+		//Dock that the boat is docked on, if any
 		var docked_dock:Dock;
 		
 		var tween_time:Number=2;
@@ -89,8 +96,7 @@
 		}
 		
 		public function init_boat():void
-		{			
-			trace("boat controller instanciran");
+		{						
 			this.addChild(alertCircle);
 			this.alertCircle.x = -0.1;
 			this.alertCircle.y = -0.1;
@@ -115,36 +121,7 @@
 			medium_explosion.update();		
 		}
 		
-		public function get_last_trajectory_rotation():Number
-		{
-			return this.last_trajectory_rotation;		
-		}
 		
-		public function set_last_trajectory_rotation(par:Number):void
-		{
-			last_trajectory_rotation = par;		
-		}
-		
-		public function get_last_trajectory_point():Point
-		{
-			return this.last_trajectory_point;		
-		}
-		
-		public function set_last_trajectory_point(x_par:Number,y_par:Number):void
-		{
-			this.last_trajectory_point = new Point(x_par,y_par);
-			//trace("Last traj. point of this boat set to: "+x_par+" , "+y_par);
-		}
-		
-		public function set_ready_for_new_path(par:Boolean):void
-		{
-			ready_for_new_path=par;
-		}
-		
-		public function get_ready_for_new_path():Boolean
-		{
-			return  ready_for_new_path;
-		}
 		
 		public function add_tween(time:Number, par_x:Number, par_y:Number):void
 		{
@@ -299,8 +276,7 @@
 				   {
 					   //SECI OVDE AKO NEMA NISTA ZA ISTOVAR!!!!!!!!!!!!!!!!
 					   if(get_unloading_cargos().length!=0)
-					   {
-						 trace ("Number of unloading cargos is: "+ get_unloading_cargos().length); 
+					   {						 
 					     disable_navigation();
 					     erase_trajectory_line();
 					   
@@ -355,7 +331,7 @@
 					   
 					     //fake tween after which we orientate the ship to be ready for sailing off
 					     //and enable navigation again
-					     trace("setting the unloaded ship rot to "+docked_dock.get_unloaded_boat_rotation());
+					     //trace("setting the unloaded ship rot to "+docked_dock.get_unloaded_boat_rotation());
 					     timeline.append(new TweenLite(this , 
 												    0.001 ,												    
 												    { 			
@@ -369,16 +345,16 @@
 					   }
 					   else
 					   {
-						   trace("no cargos for unloading");						   
+						   //trace("no cargos for unloading");						   
 					   }
 													 
 		               //trace("DOKS HIT!!!!!!!!!!!PASSED!!!!!!!!!!!");		   
 				   }
-				   else  //regular trajectory segment
+				   else  //Regular trajectory segment and prolonged trajectory segment(tween)
 				   {
-				     //trace("CHECK!");
+				     //Inserting the regular trajectory segment tween
 					 //TO DO: Insert a onComplete here to wipe the last trajectory segment
-					 //from the navigated boat
+					 //from the navigated boat, and last trajectory line as well
 		             timeline.append(     new TweenLite(this , 
 					  							    time/20*game.boat_tween_length ,												    
 					 							    {x:par_x, 
@@ -386,20 +362,13 @@
 					 								 rotation:svs ,
 		                                     		 ease:Linear.easeNone}													 
 				     									 ) );
-					  
-					 //Next we will add a tween for prolonged movement of boat, after manual
-					 //navigation has been done
-					 timeline.append(     new TweenLite(this , 
-					  							    time/20*game.boat_tween_length ,												    
-					 							    {x:par_x, 
-		   			 			                     y:par_y, 
-					 								 rotation:svs ,
-		                                     		 ease:Linear.easeNone}													 
-				     									 ) );
-					 
+														 
 					  
 				   }
+				   var lp:Point=get_last_trajectory_point();
+				   set_one_before_last_trajectory_point(lp.x,lp.y);
 			       set_last_trajectory_point(par_x, par_y);	
+				   
 				   game.draw_trajectory_segment(par_x, par_y);
 				   
 			   }
@@ -408,17 +377,67 @@
 				   //prekinuti putanju (kao da je dugme misa pusteno)
 				   game.handleMouseUp(null);
 				   
-			   }
-				//test_docks_hit(par_x,par_y);
-				
-		   }
-	       
-		   //trace("This boat's timeline played-from BoatController");
-		   timeline.play(); 
-		   // trace("is timeline active: "+timeline.active);
+			   }							
+		   }	       
+		   
 		   timeline.play(); 
 		   
 		   set_last_trajectory_rotation(get_last_trajectory_rotation()+sv);
+			
+		}
+		
+		//Append the prolonging tween based on last two trajectory points
+		public function appendProlongedTween(p1:Point, p2:Point):void
+		{
+		  //Next, we will remove the boat's prolonging tween and then add 
+	      //a new prolonging tween(for prolonged movement of boat, after manual
+		  //navigation has been done, the boat should continue to move in that same
+		  //direction)
+		  p1=get_one_before_last_trajectory_point();
+		  p2=get_last_trajectory_point();		 
+		 
+		  var time:Number=game.tween_time;
+		  var ltp:Point=p1;
+		  //trace("ltp is:"+ltp.x+" , "+ltp.y);
+		 
+		  //Let's detach the old prolonged_tween here, so we can attach a new one
+		  var all:Array = timeline.getChildren();
+		  if(all.indexOf(this.prolonged_tween)!=-1)
+		  {
+ 		   //trace("Prolonged tween je: "+this.prolonged_tween);
+ 		   //trace("indexOf it is: "+all.indexOf(this.prolonged_tween));
+ 			   
+ 		    timeline.remove(this.prolonged_tween);
+ 		    this.prolonged_tween=null;
+		   
+		  }
+		  else 
+		  {//trace("Prolonged tween je: "+this.prolonged_tween);
+			 //trace("index is:" + all.indexOf(prolonged_tween)) 
+		  }
+		 
+		  //Assign the prolonged tween here, so later we can find and detach it and 
+		  //attach a potential new one 
+		  this.prolonged_tween=new TweenLite(this , 
+		 							         time*game.boat_tween_length ,												    
+		 							         {x:p2.x+(p2.x-p1.x)*20,    			 			                    
+											  y:p2.y+(p2.y-p1.y)*20, 					 				          
+		                                      ease:Linear.easeNone,
+					                   	      onComplete:done
+					 				         }													
+			 	     				        );
+		   
+		   //trace("New prolonged is: "+par_x+(par_x-ltp.x)*20+" , "+ 
+		   //			                par_y+(par_y-ltp.y)*20);
+					 
+	       //Let's attach a new prolonged tween here					
+		   timeline.append(this.prolonged_tween);				
+			
+		}
+		
+		private function done():void
+		{
+			trace("done prolonged tweening");
 			
 		}
 		
@@ -426,34 +445,6 @@
 		{
 			rotation=90;
 			enable_navigation();
-		}
-		
-		private function test_docks_hit(par_x,par_y):void
-		{
-			    var _point:Point = new Point(par_x,par_y);
-	
-	            
-	            if(game.dock3.hitTestPoint(_point.x, _point.y, true))
-                {
-	               trace("IPSA!!! TEST NA HIT DOKA3 USPEO");
-                }			
-		}
-		
-		public function check_potential_trajectory_end(par_x:Number,par_y:Number):void
-		{
-			
-			
-		}		
-		
-		public function append_motion_point(x:Number,y:Number):void
-		{
-			this.motion_route.push(new Array(x,y));
-			
-		}
-		
-		public function append_next_tween():void
-		{			
-			
 		}		
 		
 		public function wipe_whole_motion_path():void
@@ -463,9 +454,7 @@
 			timeline.clear();
 			timeline.play();
 			timeline=new TimelineLite();
-			timeline.play();
-			
-			
+			timeline.play();	
 		}
 		
 		//Delete the trajectory line in the BoatController
@@ -502,6 +491,46 @@
 		private function get_ready_for_navigation():Boolean
 		{
 			return ready_for_navigation;			
+		}
+		
+		public function get_last_trajectory_rotation():Number
+		{
+			return this.last_trajectory_rotation;		
+		}
+		
+		public function set_last_trajectory_rotation(par:Number):void
+		{
+			last_trajectory_rotation = par;		
+		}
+		
+		public function get_last_trajectory_point():Point
+		{
+			return this.last_trajectory_point;		
+		}
+		
+		public function set_last_trajectory_point(x_par:Number,y_par:Number):void
+		{
+			this.last_trajectory_point = new Point(x_par,y_par);			
+		}
+		
+		public function get_one_before_last_trajectory_point():Point
+		{
+			return this.one_before_last_trajectory_point;		
+		}
+		
+		public function set_one_before_last_trajectory_point(x_par:Number,y_par:Number):void
+		{
+			this.one_before_last_trajectory_point = new Point(x_par,y_par);			
+		}
+		
+		public function set_ready_for_new_path(par:Boolean):void
+		{
+			ready_for_new_path=par;
+		}
+		
+		public function get_ready_for_new_path():Boolean
+		{
+			return  ready_for_new_path;
 		}
 
 	}
