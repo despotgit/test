@@ -532,11 +532,26 @@
 			
 		}
 		
+		//Delete all trajectory lines for the boat
+		public function erase_all_trajectory_line_graphics():void
+		{
+			var ar:Array=get_trajectoryLines_indices();
+			var tl:MovieClip;
+			for(var i:Number=0;i<ar.length;i++)
+			{				
+			  tl=ar[i].lin;
+			  game.delete_trajectory_segment_line(tl);
+			  tl=null;
+				
+			}	
+		}
+		
 		public function get_unloading_cargos():Array
 		{
 			return unloading_cargos;
 		}
 		
+		//Designate the cargos for unloading in the dock that boat is docked onto
 		public function set_unloading_cargos():void
 		{
 			if (docked_dock.dock_color==RED) unloading_cargos = red_cargos; 

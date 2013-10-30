@@ -269,35 +269,8 @@
 			var lineThickness:uint = 2; 
             var lineColor:uint = 0.5*0xffffff; 			
 			
-			switch(navigated_boat)
-			{
-				case boat1:
-				    t1.graphics.clear();
-					t1.graphics.lineStyle(lineThickness,lineColor); 
-  			        t1.graphics.moveTo(mouseX,mouseY); 			
-					break;
-				
-				case boat2:
-				    t2.graphics.clear();
-					t2.graphics.lineStyle(lineThickness,lineColor); 
-  			        t2.graphics.moveTo(mouseX,mouseY); 			
-					break;				
-				
-				//case boat3:
-				//  t3.graphics.clear();
-			    //  t3.graphics.lineStyle(lineThickness,lineColor); 
-  			    //    t3.graphics.moveTo(mouseX,mouseY); 			
-				//	break;	
-					
-				//case boat4:
-				//    t4.graphics.clear();
-				//	t4.graphics.lineStyle(lineThickness,lineColor); 
-  			    //    t4.graphics.moveTo(mouseX,mouseY); 			
-				//	break;	
-				
-			}			
-			//trace("mouse koordi iz maina su:"  + mouseX + " i " + mouseY);
-			 
+			navigated_boat.erase_all_trajectory_line_graphics();
+			
 			navigated_boat.set_last_trajectory_point(mouseX,mouseY);
 			navigated_boat.set_one_before_last_trajectory_point(null,null);
 			navigated_boat.set_last_trajectory_rotation(navigated_boat.rotation);
@@ -306,17 +279,10 @@
 		}
 		
 		public function erase_trajectory_for_navigated_boat():void 
-		{		
-			switch(navigated_boat)
-			{
-				case boat1:
-				    t1.graphics.clear();					
-					break;
-				
-				case boat2:
-				    t2.graphics.clear();					
-					break;										
-			}						
+		{   		
+		    navigated_boat.erase_all_trajectory_line_graphics();
+		    return;		    
+			
 		}
 		
 
