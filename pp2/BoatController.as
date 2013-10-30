@@ -15,6 +15,8 @@
 	import com.freeactionscript.effects.explosion.SmallExplosion;
 	
 	import flash.utils.Timer;
+	import flash.display.Graphics;
+	import fl.transitions.Tween;
 	
 	
 	public class BoatController extends MovieClip   
@@ -50,11 +52,20 @@
 		var prolonged_tween:TweenLite;  
 		
 		//Timeline for the boat
-		var timeline:TimelineLite;      
+		var timeline:TimelineLite;  
+		
+		//These two Points serve for calculating the prolonged trajectory tween
 		var last_trajectory_point:Point;
-		var one_before_last_trajectory_point:Point;
+		var one_before_last_trajectory_point:Point;		
+		
 		var last_trajectory_rotation:Number;
 		var last_trajectory_tween_segment:TweenLite;
+		
+		//Graphic lines for the trajectory
+		var trajectory_line_segments:Array;
+		
+		//Array of tweens and their associated indices
+		var trajectoryLines_indices:Array=new Array();
 		
 		//Dock that the boat is docked on, if any
 		var docked_dock:Dock;
@@ -293,27 +304,23 @@
 					   
 					     //this tween is getting the boat to the docking point
 					     timeline.append(     new TweenLite(this , 
-												    time ,												    
-												    {x:docked_dock.docking_point.x, 
-		   						                     y:docked_dock.docking_point.y, 
-													 rotation:svs ,
+						 						    time ,												    
+						 						    {x:docked_dock.docking_point.x, 
+		   				 		                     y:docked_dock.docking_point.y, 
+						 							 rotation:svs ,
 		                                     		 ease:Linear.easeNone}													 
-													 ) );
-													 
-													 
+						 							 ) );
+						 							 
+						 							 
                          //this tween is getting the boat to the docked point													 
 		                 timeline.append(     new TweenLite(this , 
-												    (time*2) ,												    
-												    {x:docked_dock.docked_point.x, 
-		   						                     y:docked_dock.docked_point.y, 
-													 rotation:docked_dock.get_unloading_boat_rotation(),//has to be decided based on current rotation and dock
+						 						    (time*2) ,												    
+						 						    {x:docked_dock.docked_point.x, 
+		   				 		                     y:docked_dock.docked_point.y, 
+						 							 rotation:docked_dock.get_unloading_boat_rotation(),//has to be decided based on current rotation and dock
 		                                     		 ease:Linear.easeNone}													 
-													 ) );
+						 							 ) );
 													 
-													
-													 
-													 
-					     //TO DO add tweens for unloading the cargos...(cargos fading tweens)
 					     //1 - yellow cargo
 					     //0 - red cargo
 					     for(var i:Number=0 ; i<unloading_cargos.length ; i++)
@@ -352,24 +359,36 @@
 				   }
 				   else  //Regular trajectory segment and prolonged trajectory segment(tween)
 				   {
-				     //Inserting the regular trajectory segment tween
-					 //TO DO: Insert a onComplete here to wipe the last trajectory segment
-					 //from the navigated boat, and last trajectory line as well
-		             timeline.append(     new TweenLite(this , 
-					  							    time/20*game.boat_tween_length ,												    
-					 							    {x:par_x, 
-		   			 			                     y:par_y, 
-					 								 rotation:svs ,
-		                                     		 ease:Linear.easeNone}													 
-				     									 ) );
-														 
-					  
+				     //1.Inserting the regular trajectory segment tween
+					 //2.Also insert a onComplete here to wipe the last trajectory segment
+					 //from the navigated boat, and last trajectory line as well				 
+					 //3.Update the index of current trajectory
+		             var regularTween:TweenLite=new TweenLite(this , 
+					  							       time/20*game.boat_tween_length ,												    
+					 							       {x:par_x, 
+		   			 			                        y:par_y, 
+					 								    rotation:svs ,
+		                                     		    ease:Linear.easeNone,
+													    onComplete:erase_line_graphic_for_tween(regularTween)
+													   }													 
+				     									 )
+					 var tlm:MovieClip=new MovieClip();
+					 append_trajectoryLine_index(regularTween,tlm);
+				    
+					 //Draw the actual line
+					 var lp:Point=get_last_trajectory_point();
+					 game.draw_trajectory_line(tlm, lp.x, lp.y, par_x , par_y);
+					 
+					 timeline.append(regularTween);
+					
+					
+					 
 				   }
 				   var lp:Point=get_last_trajectory_point();
 				   set_one_before_last_trajectory_point(lp.x,lp.y);
 			       set_last_trajectory_point(par_x, par_y);	
 				   
-				   game.draw_trajectory_segment(par_x, par_y);
+				   
 				   
 			   }
 			   else  //(if we HAVE hit a coast)
@@ -398,7 +417,22 @@
 		  //navigation has been done, the boat should continue to move in that same
 		  //direction)
 		  var p1:Point=get_one_before_last_trajectory_point();
-		  var p2:Point=get_last_trajectory_point();		 
+		  var p2:Point=get_last_trajectory_point();		
+		  
+		  //If one of these points has x=y=0 that means the point is actually not yet set
+		  //It is not much possible that a point is set to exactly (0,0) :)
+		  //there is probably a smarter way to detect if the point is not set, 
+		  //but for now, this is the duymber way, so leaving as it is now
+		  if ((p1.x==0 && p1.y==0)||(p2.x==0 && p2.y==0)) return;		  
+		  else trace("p1:"+p1+" p2:"+p2+" prosli smo u append prolonged");
+		  
+		  //If there is a docked dock, don't prolong the tween, we are docking.
+		  if(docked_dock!=null) return;
+		  else 
+		  {
+		    //trace ("docked dock je null");
+		  }
+		  
 		 
 		  var time:Number=game.tween_time;		
 		 
@@ -436,15 +470,9 @@
 		
 		private function done():void
 		{
-			trace("done prolonged tweening");
+			//trace("done prolonged tweening");
 			
-		}
-		
-		private function set_sail():void
-		{
-			rotation=90;
-			enable_navigation();
-		}		
+		}			
 		
 		public function wipe_whole_motion_path():void
 		{
@@ -456,11 +484,39 @@
 			timeline.play();	
 		}
 		
-		//Delete the trajectory line in the BoatController
+		//Delete the whole trajectory line in the BoatController
 		public function erase_trajectory_line():void
-		{
+		{			
+			game.erase_trajectory_for_navigated_boat();		
 			
-			game.erase_trajectory_for_navigated_boat();
+		}
+		
+		//Erase the trajectory tween's trajectory line graphic segment
+		public function erase_line_graphic_for_tween(tween_par:TweenLite):void
+		{			
+		
+			//trace("erase_line_graphic_for_tween");
+			var ar:Array=get_trajectoryLines_indices();
+			var tl:MovieClip;
+			//Go through the array and find the line graphic associated to the tween
+			for(var i:Number=0;i<ar.length;i++)
+			{
+				//trace("i je sad: "+i);
+				if (ar[i].tw==tween_par)
+				{
+				  trace("YES!!!!");
+				  tl=ar[i].li;
+				}
+				//trace ("boatcontroller eraselinegraphicfortween ar[i] je: "+ar[i]);
+				//trace ("boatcontroller eraselinegraphicfortween ar[i].tw je: "+ar[i].tw);
+				//trace ("boatcontroller eraselinegraphicfortween ar[i].li je: "+ar[i].li);
+			}
+			
+			if(tl!=null)
+			{
+			  game.delete_trajectory_segment_line(tl);
+			  tl=null;
+			}
 			
 			
 		}
@@ -476,10 +532,12 @@
 			else unloading_cargos = yellow_cargos;
 		}		
 		
+		//Enable navigation after unloading cargos on dock
 		private function enable_navigation():void
 		{
 			trace("nav enabled");
 			ready_for_navigation=true;
+			this.docked_dock=null;
 		}
 		
 		private function disable_navigation():void
@@ -487,9 +545,14 @@
 			ready_for_navigation=false;
 		}
 		
-		private function get_ready_for_navigation():Boolean
+		public function get_ready_for_navigation():Boolean
 		{
 			return ready_for_navigation;			
+		}
+		
+		public function set_ready_for_navigation(par:Boolean):void
+		{
+			ready_for_navigation=par;			
 		}
 		
 		public function get_last_trajectory_rotation():Number
@@ -530,6 +593,31 @@
 		public function get_ready_for_new_path():Boolean
 		{
 			return  ready_for_new_path;
+		}
+		
+		private function get_trajectoryLines_indices():Array
+		{
+			return this.trajectoryLines_indices;
+			
+		}
+		
+		private function set_trajectoryLines_indices(par:Array):void
+		{
+			this.trajectoryLines_indices=par;
+			
+		}
+		
+		//Append tween and its associated line graphics to the array 
+		//trajectoryLines_indices
+		private function append_trajectoryLine_index(line_par:MovieClip,index:Number):void
+		{
+			trace("append_trajectoryLine_index fja");
+			trace("line_par je: "+line_par);
+			trace("index je: "+index);
+			var new_couple:Object={lin:line_par,ind:index};
+			this.trajectoryLines_indices.push(new_couple);
+			
+			
 		}
 
 	}

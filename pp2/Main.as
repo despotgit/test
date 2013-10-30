@@ -214,10 +214,11 @@
 		{
 			//trace("test distance fje ,treba 5 da bude, ne 25: " + pp_maths.distance(new Point(0,0),new Point(3,4)));
 			
-			//setting up initial testing boat
+			//setting up the trajectory graphics
 			addChildAt(t1,1);
 			addChildAt(t2,1);	
 			
+			//Setting up two test boats
 			boat1 = generate_random_boat();					
 			addChildAt(boat1,  numChildren );         // bio na nivou 2			
 			boat1.x=150;			
@@ -238,7 +239,7 @@
 			//check boats' proximities
 			if(boat1.hitTestObject(boat2))
 			{
-				trace("they are near colison");
+				//trace("they are near colison");
 				boat1.alertCircle.visible=true;
 				boat2.alertCircle.visible=true;				
 			}						
@@ -280,7 +281,19 @@
 				    t2.graphics.clear();
 					t2.graphics.lineStyle(lineThickness,lineColor); 
   			        t2.graphics.moveTo(mouseX,mouseY); 			
-					break;						
+					break;				
+				
+				//case boat3:
+				//  t3.graphics.clear();
+			    //  t3.graphics.lineStyle(lineThickness,lineColor); 
+  			    //    t3.graphics.moveTo(mouseX,mouseY); 			
+				//	break;	
+					
+				//case boat4:
+				//    t4.graphics.clear();
+				//	t4.graphics.lineStyle(lineThickness,lineColor); 
+  			    //    t4.graphics.moveTo(mouseX,mouseY); 			
+				//	break;	
 				
 			}			
 			//trace("mouse koordi iz maina su:"  + mouseX + " i " + mouseY);
@@ -306,18 +319,8 @@
 			}						
 		}
 		
-		public function draw_traj_point(par_x:Number,par_y:Number):void
-		{			
-			var dot:TrajPoint = new TrajPoint();
-			
-			//izbaceno za sada
-			//addChildAt(dot,0);     //the zero here is z-depth of the new child
-			dot.x=par_x;
-			dot.y=par_y;					
-			
-		}
 
-        //From here we propagate event to the boat and have it add an appropriate tween
+        //From here we propagate event to the boat and have it add appropriate tween(s)
 		function startDrawing(event:MouseEvent):void 
 		{   			
 		    //Don't allow navigation if boats already colided and game is already over
@@ -366,7 +369,7 @@
 		   navigated_boat.appendProlongedTween();
 		   else trace("Navigacija nije dozvoljena vise.");
 		   navigated_boat=null;
-		   trace("mouse is upped");
+		   //trace("mouse is upped");
 		} 
 		
 		function test_coasts_hit(p:Point):Boolean
@@ -430,39 +433,29 @@
 			else return null;
 		}
 		
-		function draw_trajectory_segment(par_x:Number, par_y:Number):void
+		//Draw a trajectory segment using the given line
+		function draw_trajectory_line(t:MovieClip, x1, y1, x2, y2:Number):void
 		{
-			switch(navigated_boat)
-			{
-				  case boat1:
-				  {
-					t1.graphics.lineTo(mouseX,mouseY);   //trace("t1 drawn");			
-					break;
-			 	  }
-				  case boat2:
-				  {
-					t2.graphics.lineTo(mouseX,mouseY);   //trace("t2 drawn"); 			
-					break;
-				  };		
-			}		
+			
+			addChildAt(t,1);
+			var lineThickness:uint = 2; 
+            var lineColor:uint = 0.5*0xffffff; 			
+			
+		    t.graphics.clear();
+		    t.graphics.lineStyle(lineThickness,lineColor); 
+  			t.graphics.moveTo(x1,y1); 	
+		    t.graphics.lineTo(x2,y2);   //trace("t1 drawn");					
+			
+			
 		}		
 		
-		//Delete the first drawn trajectory segment that is remaining
-		function delete_trajectory_segment():void
+		//Delete one trajectory line segment
+		function delete_trajectory_segment_line(t:MovieClip):void
 		{
-			switch(navigated_boat)
-			{
-				  case boat1:
-				  {
-					//t1.graphics.lineTo(mouseX,mouseY);   //trace("t1 drawn");			
-					break;
-			 	  }
-				  case boat2:
-				  {
-					//t2.graphics.lineTo(mouseX,mouseY);   //trace("t2 drawn"); 			
-					break;
-				  };		
-			}		
+			trace("delete_trajectory_segment_line");
+			trace(t);
+		    t.graphics.clear();
+		    
 		}		
 
 		function deleteStage(event:MouseEvent):void 
