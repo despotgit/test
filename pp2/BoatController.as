@@ -67,6 +67,12 @@
 		//Array of tweens and their associated indices
 		var trajectoryLines_indices:Array=new Array();
 		
+		//Current index of the trajectory array
+		var currentTrajectoryIndex:Number=-1;
+		
+		//Index of earliest tween for which to erase the trajectory line
+		var earliest_line_index:Number=0;
+		
 		//Dock that the boat is docked on, if any
 		var docked_dock:Dock;
 		
@@ -90,6 +96,15 @@
 			init_boat();
 		}
 		
+		public function init_boat():void
+		{						
+			this.addChild(alertCircle);
+			this.alertCircle.x = -0.1;
+			this.alertCircle.y = -0.1;
+			this.alertCircle.visible = false;
+			
+		}		
+		
 		function handleMouseDown(event:MouseEvent):void 
 		{
 			//trace("mouse koordi iz boatcontrollera su:"  + stage.mouseX + " i " + stage.mouseY);
@@ -104,16 +119,7 @@
 			{
 			    wipe_whole_motion_path();
 			}
-		}
-		
-		public function init_boat():void
-		{						
-			this.addChild(alertCircle);
-			this.alertCircle.x = -0.1;
-			this.alertCircle.y = -0.1;
-			this.alertCircle.visible = false;
-			
-		}
+		}	
 		
 		public function activateExplosion():void
 		{
@@ -363,32 +369,35 @@
 					 //2.Also insert a onComplete here to wipe the last trajectory segment
 					 //from the navigated boat, and last trajectory line as well				 
 					 //3.Update the index of current trajectory
+					 this.currentTrajectoryIndex++;
+					 
+					 //Add the Graphicls for drawing the line and index it
+					 var tlm:MovieClip=new MovieClip();
+					 append_trajectoryLine_index(tlm,this.currentTrajectoryIndex);
+				    
+					 //Draw the actual line
+					 var lp:Point=get_last_trajectory_point();
+					 game.draw_trajectory_line(tlm, lp.x, lp.y, par_x, par_y);
+					 
+					 //Add the trajectory tween
 		             var regularTween:TweenLite=new TweenLite(this , 
 					  							       time/20*game.boat_tween_length ,												    
 					 							       {x:par_x, 
 		   			 			                        y:par_y, 
 					 								    rotation:svs ,
 		                                     		    ease:Linear.easeNone,
-													    onComplete:erase_line_graphic_for_tween(regularTween)
+													    onComplete:erase_line_graphic_for_earliest_tween
+														//onComplete:doComplete
 													   }													 
-				     									 )
-					 var tlm:MovieClip=new MovieClip();
-					 append_trajectoryLine_index(regularTween,tlm);
-				    
-					 //Draw the actual line
-					 var lp:Point=get_last_trajectory_point();
-					 game.draw_trajectory_line(tlm, lp.x, lp.y, par_x , par_y);
+				     									 )					
 					 
-					 timeline.append(regularTween);
-					
+					 timeline.append(regularTween);					
 					
 					 
 				   }
 				   var lp:Point=get_last_trajectory_point();
 				   set_one_before_last_trajectory_point(lp.x,lp.y);
-			       set_last_trajectory_point(par_x, par_y);	
-				   
-				   
+			       set_last_trajectory_point(par_x, par_y);				   
 				   
 			   }
 			   else  //(if we HAVE hit a coast)
@@ -404,6 +413,7 @@
 		   set_last_trajectory_rotation(get_last_trajectory_rotation()+sv);
 			
 		}
+		
 		
 		//Append the prolonging tween based on last two trajectory points
 		//TO DO 30.10.2013:
@@ -484,7 +494,7 @@
 			timeline.play();	
 		}
 		
-		//Delete the whole trajectory line in the BoatController
+		//Delete the whole trajectory line for the boat
 		public function erase_trajectory_line():void
 		{			
 			game.erase_trajectory_for_navigated_boat();		
@@ -492,24 +502,23 @@
 		}
 		
 		//Erase the trajectory tween's trajectory line graphic segment
-		public function erase_line_graphic_for_tween(tween_par:TweenLite):void
+		public function erase_line_graphic_for_earliest_tween():void
 		{			
-		
-			//trace("erase_line_graphic_for_tween");
+		    //trace("Oncomplete designated fuinction");return;
+			trace("erase_line_graphic_for_earliest_tween");
+			var index_par:Number=this.earliest_line_index;
 			var ar:Array=get_trajectoryLines_indices();
 			var tl:MovieClip;
 			//Go through the array and find the line graphic associated to the tween
 			for(var i:Number=0;i<ar.length;i++)
 			{
 				//trace("i je sad: "+i);
-				if (ar[i].tw==tween_par)
+				if (ar[i].ind==index_par)
 				{
 				  trace("YES!!!!");
-				  tl=ar[i].li;
+				  tl=ar[i].lin;
 				}
-				//trace ("boatcontroller eraselinegraphicfortween ar[i] je: "+ar[i]);
-				//trace ("boatcontroller eraselinegraphicfortween ar[i].tw je: "+ar[i].tw);
-				//trace ("boatcontroller eraselinegraphicfortween ar[i].li je: "+ar[i].li);
+				
 			}
 			
 			if(tl!=null)
@@ -517,6 +526,8 @@
 			  game.delete_trajectory_segment_line(tl);
 			  tl=null;
 			}
+			
+			this.earliest_line_index++;
 			
 			
 		}
@@ -612,7 +623,7 @@
 		private function append_trajectoryLine_index(line_par:MovieClip,index:Number):void
 		{
 			trace("append_trajectoryLine_index fja");
-			trace("line_par je: "+line_par);
+			//trace("line_par je: "+line_par);
 			trace("index je: "+index);
 			var new_couple:Object={lin:line_par,ind:index};
 			this.trajectoryLines_indices.push(new_couple);
