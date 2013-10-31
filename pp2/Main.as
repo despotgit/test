@@ -261,6 +261,65 @@
 			
 		}	
 		
+		//Calculate the point of prolonged trajectory tween based on two last trajectory points
+		//Coasts and docks must be avoided.
+		public function calculate_prolonged_point(x1,y1,x2,y2:Number):Array
+		{
+			var p1:Point=new Point(x1,y1);
+			var p2:Point=new Point(x2,y2);
+			var p:Point=new Point(x2,y2);
+			 
+			//Make a loop here, add another tween length to the p2, check if the new point
+			//overlaps any of the docks or coasts, if not, add another tween and check again.
+			//If it overlaps a dock or a coast, return the existing point.
+			//Make 50 checks max.
+			var dx:Number=x2-x1;
+			var dy:Number=y2-y1;		
+			
+			//This var is how many times is the prolonged bigger than regular trajectory tween
+			//so that we know how many times longer than regular tween should the prolonged 
+			//tween last for
+			var multiple:Number=1;
+			
+			for(var i:Number=0; i<50; i++)
+			{  			  
+			  if
+			  (
+			  (left_coast.hitTestPoint(p.x+dx, p.y+dy, true))||
+			  (upper_coast.hitTestPoint(p.x+dx, p.y+dy, true))||
+			  (island_coast.hitTestPoint(p.x+dx, p.y+dy, true))||
+			  (lower_coast.hitTestPoint(p.x+dx, p.y+dy, true))||
+			  (dock1.hitTestPoint(p.x+dx, p.y+dy, true))||
+			  (dock2.hitTestPoint(p.x+dx, p.y+dy, true))||
+			  (dock3.hitTestPoint(p.x+dx, p.y+dy, true))||
+			  (dock4.hitTestPoint(p.x+dx, p.y+dy, true))||
+			  (dock5.hitTestPoint(p.x+dx, p.y+dy, true))||
+			  (dock6.hitTestPoint(p.x+dx, p.y+dy, true))
+			  )
+			  {
+				  return [p.x,p.y,multiple];
+		      }
+			  else
+			  {
+			    p.x = p.x+dx;
+			    p.y = p.y+dy;  
+				multiple++;
+			  }
+			} 
+			
+			return [p.x, p.y, multiple];
+			
+		}
+		
+		public function check_point_overlaps_docks_or_coasts(p:Point)
+		{
+			var overlaps:Boolean=false;
+			
+			
+			
+			
+		}
+		
 		//Erasing trajectory and setting initial (which is actually last in the array of
 		//potential tweens) trajectory point and rotation for use in add_tween function
 		//later

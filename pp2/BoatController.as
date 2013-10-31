@@ -456,16 +456,18 @@
 		  }
 		  else 
 		  {  
-		     //trace("Prolonged tween je: "+this.prolonged_tween);
-			 //trace("index is:" + all.indexOf(prolonged_tween)) 
+		      //Don't do anything, there is no prolonged tween to erase anyway
 		  }
+		 
+		  //Calculate the prolonged tween's last point to tween to. Avoid coasts and docks
+		  var c:Array = game.calculate_prolonged_point(p1.x, p1.y, p2.x, p2.y);
 		 
 		  //Assign the prolonged tween here, so later we can find and detach it and 
 		  //attach a potential new one 
 		  this.prolonged_tween=new TweenLite(this , 
-		 							         time*game.boat_tween_length ,												    
-		 							         {x:p2.x+(p2.x-p1.x)*20,    			 			                    
-											  y:p2.y+(p2.y-p1.y)*20, 					 				          
+		 							         time*c[2],												    
+		 							         {x:c[0],
+											  y:c[1],
 		                                      ease:Linear.easeNone,
 					                   	      onComplete:done
 					 				         }													
