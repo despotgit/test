@@ -418,8 +418,8 @@
 		//Delete one trajectory line segment
 		function delete_trajectory_segment_line(t:MovieClip):void
 		{
-			trace("delete_trajectory_segment_line");
-			trace(t);
+			//trace("delete_trajectory_segment_line");
+			//trace(t);
 		    t.graphics.clear();
 		    
 		}		

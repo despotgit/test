@@ -415,11 +415,7 @@
 		}
 		
 		
-		//Append the prolonging tween based on last two trajectory points
-		//TO DO 30.10.2013:
-		//videti ovde da se proverava da li treba da se pravi prolonged tween,
-		//jer u situaciji kada se samo klikne na brodic i pusti dugme misa,
-		//ne treba da se radi prolonged tween.
+		//Append the prolonging tween based on last two trajectory points		
 		public function appendProlongedTween():void
 		{
 		  //Next, we will remove the boat's prolonging tween and then add 
@@ -432,9 +428,10 @@
 		  //If one of these points has x=y=0 that means the point is actually not yet set
 		  //It is not much possible that a point is set to exactly (0,0) :)
 		  //there is probably a smarter way to detect if the point is not set, 
-		  //but for now, this is the duymber way, so leaving as it is now
+		  //but for now, this is the easier dumber way, so leaving it as it is for now
 		  if ((p1.x==0 && p1.y==0)||(p2.x==0 && p2.y==0)) return;		  
-		  else trace("p1:"+p1+" p2:"+p2+" prosli smo u append prolonged");
+		  else {//trace("p1:"+p1+" p2:"+p2+" prosli smo u append prolonged");
+		  }
 		  
 		  //If there is a docked dock, don't prolong the tween, we are docking.
 		  if(docked_dock!=null) return;
@@ -478,6 +475,19 @@
 			
 		}
 		
+		//Append tween and its associated line graphics to the array 
+		//trajectoryLines_indices
+		private function append_trajectoryLine_index(line_par:MovieClip,index:Number):void
+		{
+			//trace("append_trajectoryLine_index fja");
+			//trace("line_par je: "+line_par);
+			trace("index traj line indexa je: "+index);
+			var new_couple:Object={lin:line_par,ind:index};
+			this.trajectoryLines_indices.push(new_couple);
+			
+			
+		}
+		
 		private function done():void
 		{
 			//trace("done prolonged tweening");
@@ -506,6 +516,8 @@
 		{			
 		    //trace("Oncomplete designated fuinction");return;
 			trace("erase_line_graphic_for_earliest_tween");
+			
+			
 			var index_par:Number=this.earliest_line_index;
 			var ar:Array=get_trajectoryLines_indices();
 			var tl:MovieClip;
@@ -513,10 +525,13 @@
 			for(var i:Number=0;i<ar.length;i++)
 			{
 				//trace("i je sad: "+i);
+				trace("ar[i].ind je sad: "+ar[i].ind);
+				trace("index_par je sad: "+index_par);
 				if (ar[i].ind==index_par)
 				{
 				  trace("YES!!!!");
 				  tl=ar[i].lin;
+				  break;
 				}
 				
 			}
@@ -535,6 +550,7 @@
 		//Delete all trajectory lines for the boat
 		public function erase_all_trajectory_line_graphics():void
 		{
+			trace ("in erase all traj line graphics");
 			var ar:Array=get_trajectoryLines_indices();
 			var tl:MovieClip;
 			for(var i:Number=0;i<ar.length;i++)
@@ -544,6 +560,11 @@
 			  tl=null;
 				
 			}	
+			
+			this.trajectoryLines_indices=new Array();
+			this.earliest_line_index=0;
+			this.currentTrajectoryIndex=-1;
+			trace ("earliest line index je: "+this.earliest_line_index);
 		}
 		
 		public function get_unloading_cargos():Array
@@ -561,7 +582,7 @@
 		//Enable navigation after unloading cargos on dock
 		private function enable_navigation():void
 		{
-			trace("nav enabled");
+			//trace("nav enabled");
 			ready_for_navigation=true;
 			this.docked_dock=null;
 		}
@@ -633,18 +654,7 @@
 			
 		}
 		
-		//Append tween and its associated line graphics to the array 
-		//trajectoryLines_indices
-		private function append_trajectoryLine_index(line_par:MovieClip,index:Number):void
-		{
-			trace("append_trajectoryLine_index fja");
-			//trace("line_par je: "+line_par);
-			trace("index je: "+index);
-			var new_couple:Object={lin:line_par,ind:index};
-			this.trajectoryLines_indices.push(new_couple);
-			
-			
-		}
+		
 
 	}
 	
