@@ -30,14 +30,7 @@
 		
 		//Points textbox and points var
 		var points:TextField;
-		var points_number:Number;
-		
-		//boats' trajectory movieclips
-		var t1:MovieClip;
-		var t2:MovieClip;
-		var t3:MovieClip;
-		var t4:MovieClip;
-		var t5:MovieClip;
+		var points_number:Number;		
 		
 		//docks
 		var dock1:Dock1;
@@ -63,18 +56,6 @@
 		    //Variable for stopping the action when the collision occurs
 		    game_on=true;
 			
-			t1 = new MovieClip();
-			t2 = new MovieClip();
-			t3 = new MovieClip();
-			t4 = new MovieClip();
-			t5 = new MovieClip();
-			
-			boats_trajs=new Array();
-			boats_trajs["boat1"] = t1;
-			boats_trajs["boat2"] = t2;
-			boats_trajs["boat3"] = t3;
-			boats_trajs["boat4"] = t4;
-			boats_trajs["boat5"] = t5;
 			
 			dock1 = (Dock1)(getChildByName("dock1_mc")); //162.35 , 70 mu je docking point
 			dock2 = (Dock2)(getChildByName("dock2_mc"));
@@ -213,11 +194,7 @@
 		function init_boats():void
 		{
 			//trace("test distance fje ,treba 5 da bude, ne 25: " + pp_maths.distance(new Point(0,0),new Point(3,4)));
-			
-			//setting up the trajectory graphics
-			addChildAt(t1,1);
-			addChildAt(t2,1);	
-			
+						
 			//Setting up two test boats
 			boat1 = generate_random_boat();					
 			addChildAt(boat1,  numChildren );         // bio na nivou 2			
