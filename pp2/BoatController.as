@@ -522,26 +522,9 @@
 			
 			var index_par:Number=this.earliest_line_index;
 			var ar:Array=get_trajectoryLines_indices();
-			var tl:MovieClip;
-			//Go through the array and find the line graphic associated to the tween
-			//for(var i:Number=0;i<ar.length;i++)
-			//{
-				//trace("i je sad: "+i);
-			//	trace("ar[i].ind je sad: "+ar[i].ind);
-			//	trace("index_par je sad: "+index_par);
-			//	if (ar[i].ind==index_par)
-			//	{
-			//	  trace("YES!!!!");
-			//	  tl=ar[i].lin;
-			//	  break;
-			//	}				
-			//}
+			var tl:MovieClip;			
 			
-			tl=ar[index_par].lin;
-			
-			
-			
-			
+			tl=ar[index_par].lin;				
 			
 			if(tl!=null)
 			{
