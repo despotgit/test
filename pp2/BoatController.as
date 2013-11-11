@@ -348,7 +348,7 @@
 					     timeline.append(new TweenLite(this , 
 												    0.001 ,												    
 												    { 			
-													 rotation:docked_dock.get_unloaded_boat_rotation(), 
+													 rotation:rotation,
 		                                     		 ease:Linear.easeNone,
 													 onComplete:enable_navigation
 													 }													 
@@ -524,19 +524,24 @@
 			var ar:Array=get_trajectoryLines_indices();
 			var tl:MovieClip;
 			//Go through the array and find the line graphic associated to the tween
-			for(var i:Number=0;i<ar.length;i++)
-			{
+			//for(var i:Number=0;i<ar.length;i++)
+			//{
 				//trace("i je sad: "+i);
-				trace("ar[i].ind je sad: "+ar[i].ind);
-				trace("index_par je sad: "+index_par);
-				if (ar[i].ind==index_par)
-				{
-				  trace("YES!!!!");
-				  tl=ar[i].lin;
-				  break;
-				}
-				
-			}
+			//	trace("ar[i].ind je sad: "+ar[i].ind);
+			//	trace("index_par je sad: "+index_par);
+			//	if (ar[i].ind==index_par)
+			//	{
+			//	  trace("YES!!!!");
+			//	  tl=ar[i].lin;
+			//	  break;
+			//	}				
+			//}
+			
+			tl=ar[index_par].lin;
+			
+			
+			
+			
 			
 			if(tl!=null)
 			{
@@ -586,6 +591,7 @@
 		{
 			//trace("nav enabled");
 			ready_for_navigation=true;
+			rotation=docked_dock.get_unloaded_boat_rotation();
 			this.docked_dock=null;
 		}
 		
