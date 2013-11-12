@@ -15,6 +15,11 @@
 	import flash.display.MovieClip;
 	import flash.text.TextField;
 	
+	import flash.display.DisplayObject;
+    import flash.display.DisplayObjectContainer;
+    import PixelPerfectCollisionDetection;
+	import com.aem.utils.HitTest;
+	
 	
 	public class Main extends MovieClip
 	{
@@ -227,7 +232,7 @@
 			}
 	   		
 			//check boats' collisions
-			if(boat1.boat_gra.hitTestObject(boat2.boat_gra))
+			if(HitTest.intersects(boat1.boat_gra,boat2.boat_gra, this))
 			if(game_on)
 	  		{				
 				boat1.activateExplosion();
