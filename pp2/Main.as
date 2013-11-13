@@ -17,7 +17,7 @@
 	
 	import flash.display.DisplayObject;
     import flash.display.DisplayObjectContainer;
-    import PixelPerfectCollisionDetection;
+    //import PixelPerfectCollisionDetection;
 	import com.aem.utils.HitTest;
 	
 	

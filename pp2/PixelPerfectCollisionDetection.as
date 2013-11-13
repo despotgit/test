@@ -1,4 +1,4 @@
-package 
+﻿package 
 {
 	import flash.display.BitmapData;
 	import flash.display.BitmapDataChannel;
