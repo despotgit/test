@@ -181,7 +181,7 @@
 			dock4.set_unloaded_boat_rotation(-45);
 			
 			//setting for dock5
-			dock5.set_docking_point(564,476);
+			dock5.set_docking_point(562,474);
 			dock5.set_docked_point(572,484);
 			dock5.set_unloading_boat_rotation(45);
 			dock5.set_unloaded_boat_rotation(225);
@@ -261,7 +261,7 @@
 			//This var is how many times is the prolonged bigger than regular trajectory tween
 			//so that we know how many times longer than regular tween should the prolonged 
 			//tween last for
-			var multiple:Number=1;
+			var multiple:Number=0;
 			
 			for(var i:Number=0; i<50; i++)
 			{  			  
@@ -310,13 +310,16 @@
 			var lineThickness:uint = 2; 
             var lineColor:uint = 0.5*0xffffff; 			
 			
-			navigated_boat.erase_all_trajectory_line_graphics();
+			if(navigated_boat!=null)
+			{
+			  navigated_boat.erase_all_trajectory_line_graphics();
 			
-			navigated_boat.set_last_trajectory_point(mouseX,mouseY);
-			navigated_boat.set_one_before_last_trajectory_point(null,null);
-			navigated_boat.set_last_trajectory_rotation(navigated_boat.rotation);
+			  navigated_boat.set_last_trajectory_point(mouseX,mouseY);
+			  navigated_boat.set_one_before_last_trajectory_point(null,null);
+			  navigated_boat.set_last_trajectory_rotation(navigated_boat.rotation);
 			
-			stage.addEventListener(MouseEvent.MOUSE_MOVE,startDrawing);
+			  stage.addEventListener(MouseEvent.MOUSE_MOVE,startDrawing);
+			}
 		}
 		
 		public function erase_trajectory_for_navigated_boat():void 
@@ -373,10 +376,14 @@
 		{ 
   		   stage.removeEventListener(MouseEvent.MOUSE_MOVE,startDrawing); 
 		   if(game_on)
-		   navigated_boat.appendProlongedTween();
+		   if(navigated_boat!=null)
+		   {
+		     navigated_boat.appendProlongedTween();
+		     
+		     navigated_boat=null;
+		   }
+		   else;
 		   else trace("Navigacija nije dozvoljena vise.");
-		   navigated_boat=null;
-		   //trace("mouse is upped");
 		} 
 		
 		function test_coasts_hit(p:Point):Boolean
@@ -397,13 +404,15 @@
 		{
 			if(dock1.hitTestPoint(p.x,p.y))
 			{
+			    trace("dock1 hit");				
 				bc.docked_dock=dock1;
-				bc.set_unloading_cargos();		
+				bc.set_unloading_cargos();	                
 				return dock1;
 				   
 			}
 			else if(dock2.hitTestPoint(p.x,p.y))
 			{
+			    trace("dock2 hit");				
 				bc.docked_dock=dock2;
 				bc.set_unloading_cargos();		
 				return dock1;
@@ -411,6 +420,7 @@
 			}
 			else if(dock3.hitTestPoint(p.x,p.y))
 			{
+			    trace("dock3 hit");				
 				bc.docked_dock=dock3;
 				bc.set_unloading_cargos();		
 				return dock3;
@@ -418,6 +428,7 @@
 			}
 			else if(dock4.hitTestPoint(p.x,p.y))
 			{
+			    trace("dock4 hit");				
 				bc.docked_dock=dock4;
 				bc.set_unloading_cargos();		
 				return dock4;
@@ -425,6 +436,7 @@
 			}
 			else if(dock5.hitTestPoint(p.x,p.y))
 			{
+			    trace("dock5 hit");				
 				bc.docked_dock=dock5;
 				bc.set_unloading_cargos();		
 				return dock5;
@@ -432,6 +444,7 @@
 			}
 			else if(dock6.hitTestPoint(p.x,p.y))
 			{
+			    trace("dock6 hit");				
 				bc.docked_dock=dock6;
 				bc.set_unloading_cargos();		
 				return dock6;
@@ -454,17 +467,8 @@
 		    t.graphics.lineTo(x2,y2);   //trace("t1 drawn");					
 			
 			
-		}		
+		}	
 		
-		//Delete one trajectory line segment
-		function delete_trajectory_segment_line(t:MovieClip):void
-		{
-			//trace("delete_trajectory_segment_line");
-			//trace(t);
-		    t.graphics.clear();
-		    
-		}		
-
 		function deleteStage(event:MouseEvent):void 
 		{ 
   		   graphics.clear(); 

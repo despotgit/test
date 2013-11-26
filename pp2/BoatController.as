@@ -99,8 +99,8 @@
 		public function init_boat():void
 		{						
 			this.addChild(alertCircle);
-			this.alertCircle.x = -0.1;
-			this.alertCircle.y = -0.1;
+			this.alertCircle.x = 0;//-0.1;
+			this.alertCircle.y = 0;//-0.1;
 			this.alertCircle.visible = false;
 			
 		}		
@@ -292,46 +292,48 @@
                    if(game.test_docks_hit(this,new Point(par_x,par_y))!=null)
 				   {
 					   //SECI OVDE AKO NEMA NISTA ZA ISTOVAR!!!!!!!!!!!!!!!!
-					   if(get_unloading_cargos().length!=0)
+				   	   if(get_unloading_cargos().length!=0)
 					   {						 
-					     disable_navigation();
-					     erase_trajectory_line();
+					       disable_navigation();
+					       erase_trajectory_line();
 					   
-					     //so we have actually hit a dock, add special tweens
-					     //for docking......
-					     //trace("DOKS HIT!!!!!!!!!!!!!!!!!!!!!!!!!!");
+					       //so we have actually hit a dock, add special tweens
+					       //for docking......
+					       //trace("DOKS HIT!!!!!!!!!!!!!!!!!!!!!!!!!!");
 					   
-					     //calculate additional(transitional) rotations for docking
-					     //and docked position of the boat to the dock (well second
-					     //of these is zero, since the rotation is the same in the
-					     //docking and docked position
+					       //calculate additional(transitional) rotations for docking
+					       //and docked position of the boat to the dock (well second
+					       //of these is zero, since the rotation is the same in the
+					       //docking and docked position
 					   
-					     var docking_trans_rotation:Number=pp_maths.find_transitional_rotation(get_last_trajectory_rotation(),docked_dock.get_unloading_boat_rotation());
-					   
-					     //this tween is getting the boat to the docking point
-					     timeline.append(     new TweenLite(this , 
+					       var docking_trans_rotation:Number=pp_maths.find_transitional_rotation(get_last_trajectory_rotation(),docked_dock.get_unloading_boat_rotation());
+					   	   
+					       //this tween is getting the boat to the docking point
+						   trace("Adding tween for preparing to dock");
+					       timeline.append(     new TweenLite(this , 
 						 						    time ,												    
 						 						    {x:docked_dock.docking_point.x, 
 		   				 		                     y:docked_dock.docking_point.y, 
 						 							 rotation:svs ,
 		                                     		 ease:Linear.easeNone}													 
-						 							 ) );
+						 							 ) );						   
 						 							 
-						 							 
-                         //this tween is getting the boat to the docked point													 
-		                 timeline.append(     new TweenLite(this , 
+                           //this tween is getting the boat to the docked point													 
+						   
+						   trace("Adding tween for docking");
+		                   timeline.append(     new TweenLite(this , 
 						 						    (time*2) ,												    
 						 						    {x:docked_dock.docked_point.x, 
 		   				 		                     y:docked_dock.docked_point.y, 
 						 							 rotation:docked_dock.get_unloading_boat_rotation(),//has to be decided based on current rotation and dock
 		                                     		 ease:Linear.easeNone}													 
 						 							 ) );
-													 
-					     //1 - yellow cargo
-					     //0 - red cargo
-					     for(var i:Number=0 ; i<unloading_cargos.length ; i++)
-					     {
-						   timeline.append(     new TweenLite(unloading_cargos[i] , 
+						   
+					       //1 - yellow cargo
+					       //0 - red cargo
+					       for(var i:Number=0 ; i<unloading_cargos.length ; i++)
+					       {
+						     timeline.append(     new TweenLite(unloading_cargos[i] , 
 												    2 ,												    
 												    { 
 													 alpha:0,													 
@@ -340,13 +342,13 @@
 													 ) );	
 						   
 						   
-					     }
-					   
-					     //fake tween after which we orientate the ship to be ready for sailing off
-					     //and enable navigation again
-					     //trace("setting the unloaded ship rot to "+docked_dock.get_unloaded_boat_rotation());
-					     timeline.append(new TweenLite(this , 
-												    0.001 ,												    
+					       }
+						   
+					       //fake tween after which we orientate the ship to be ready for sailing off
+					       //and enable navigation again
+					       //trace("setting the unloaded ship rot to "+docked_dock.get_unloaded_boat_rotation());
+					       timeline.append(new TweenLite(this , 
+												    0.01 ,												    
 												    { 			
 													 rotation:rotation,
 		                                     		 ease:Linear.easeNone,
@@ -354,33 +356,33 @@
 													 }													 
 													 ) );	
 
-					   					   
-					   }
-					   else
-					   {
-						   //trace("no cargos for unloading");						   
-					   }
+						   }
+					     
+					     else
+					     {
+						     //trace("no cargos for unloading");						   
+					     }
 													 
-		               //trace("DOKS HIT!!!!!!!!!!!PASSED!!!!!!!!!!!");		   
-				   }
-				   else  //Regular trajectory segment and prolonged trajectory segment(tween)
-				   {
-				     //1.Inserting the regular trajectory segment tween
-					 //2.Also insert a onComplete here to wipe the last trajectory segment
-					 //from the navigated boat, and last trajectory line as well				 
-					 //3.Update the index of current trajectory
-					 this.currentTrajectoryIndex++;
+		                 //trace("DOKS HIT!!!!!!!!!!!PASSED!!!!!!!!!!!");		   
+				     }
+				     else  //Regular trajectory segment
+				     {
+				         //1.Inserting the regular trajectory segment tween
+					     //2.Also insert a onComplete here to wipe the last trajectory segment
+					     //from the navigated boat, and last trajectory line as well				 
+					     //3.Update the index of current trajectory
+					     this.currentTrajectoryIndex++;
 					 
-					 //Add the Graphicls for drawing the line and index it
-					 var tlm:MovieClip=new MovieClip();
-					 append_trajectoryLine_index(tlm,this.currentTrajectoryIndex);
+					     //Add the Graphicls for drawing the line and index it
+					     var tlm:MovieClip=new MovieClip();
+					     append_trajectoryLine_index(tlm,this.currentTrajectoryIndex);
 				    
-					 //Draw the actual line
-					 var lp:Point=get_last_trajectory_point();
-					 game.draw_trajectory_line(tlm, lp.x, lp.y, par_x, par_y);
+					     //Draw the actual line
+					     var lp:Point=get_last_trajectory_point();
+					     game.draw_trajectory_line(tlm, lp.x, lp.y, par_x, par_y);
 					 
-					 //Add the trajectory tween
-		             var regularTween:TweenLite=new TweenLite(this , 
+					     //Add the trajectory tween
+		                 var regularTween:TweenLite=new TweenLite(this , 
 					  							       time/20*game.boat_tween_length ,												    
 					 							       {x:par_x, 
 		   			 			                        y:par_y, 
@@ -391,102 +393,99 @@
 													   }													 
 				     									 )					
 					 
-					 timeline.append(regularTween);					
+					     timeline.append(regularTween);					
 					
 					 
-				   }
-				   var lp:Point=get_last_trajectory_point();
-				   set_one_before_last_trajectory_point(lp.x,lp.y);
-			       set_last_trajectory_point(par_x, par_y);				   
+				     }
+				     var lp:Point=get_last_trajectory_point();
+				     set_one_before_last_trajectory_point(lp.x,lp.y);
+			         set_last_trajectory_point(par_x, par_y);				   
 				   
-			   }
-			   else  //(if we HAVE hit a coast)
-			   {
-				   //prekinuti putanju (kao da je dugme misa pusteno)
-				   game.handleMouseUp(null);
+			     }
+			     else  //(if we HAVE hit a coast)
+			     {
+				     //prekinuti putanju (kao da je dugme misa pusteno)
+				     game.handleMouseUp(null);
+					 
 				   
-			   }							
-		   }	       
+			     }							
+		     }	       
 		   
-		   timeline.play(); 
+		     timeline.play(); 
 		   
-		   set_last_trajectory_rotation(get_last_trajectory_rotation()+sv);
-			
-		}
-		
-		
-		//Append the prolonging tween based on last two trajectory points		
-		public function appendProlongedTween():void
-		{
-		  //Next, we will remove the boat's prolonging tween and then add 
-	      //a new prolonging tween(for prolonged movement of boat, after manual
-		  //navigation has been done, the boat should continue to move in that same
-		  //direction)
-		  var p1:Point=get_one_before_last_trajectory_point();
-		  var p2:Point=get_last_trajectory_point();		
-		  
-		  //If one of these points has x=y=0 that means the point is actually not yet set
-		  //It is not much possible that a point is set to exactly (0,0) :)
-		  //there is probably a smarter way to detect if the point is not set, 
-		  //but for now, this is the easier dumber way, so leaving it as it is for now
-		  if ((p1.x==0 && p1.y==0)||(p2.x==0 && p2.y==0)) return;		  
-		  else {//trace("p1:"+p1+" p2:"+p2+" prosli smo u append prolonged");
-		  }
-		  
-		  //If there is a docked dock, don't prolong the tween, we are docking.
-		  if(docked_dock!=null) return;
-		  else 
-		  {
-		    //trace ("docked dock je null");
-		  }
-		  
+		     set_last_trajectory_rotation(get_last_trajectory_rotation()+sv);			
+		 }
 		 
-		  var time:Number=game.tween_time;		
 		 
-		  //Let's detach the old prolonged_tween here, so we can attach a new one
-		  var all:Array = timeline.getChildren();
-		  if(all.indexOf(this.prolonged_tween)!=-1)
-		  {
- 		    //trace("Prolonged tween je: "+this.prolonged_tween);
- 		    //trace("indexOf it is: "+all.indexOf(this.prolonged_tween));
- 			   
- 		    timeline.remove(this.prolonged_tween);
- 		    this.prolonged_tween=null;
+		 //Append the prolonging tween based on last two trajectory points		
+		 public function appendProlongedTween():void
+		 {
+			 //return;
+		     //Next, we will remove the boat's prolonging tween and then add 
+	         //a new prolonging tween, for prolonged movement of boat. This is because after
+		     //manual navigation has been done, the boat should continue to move in that same
+		     //direction.
+		     var p1:Point=get_one_before_last_trajectory_point();
+		     var p2:Point=get_last_trajectory_point();		
+		  
+		     //If one of these points has x=y=0 that means the point is actually not yet set
+		     //It is not much possible that a point is set to exactly (0,0) :)
+		     //there is probably a smarter way to detect if the point is not set, 
+		     //but for now, this is the easier dumber way, so leaving it as it is for now
+		     if ((p1.x==0 && p1.y==0)||(p2.x==0 && p2.y==0)) return;		  
+		     else {//trace("p1:"+p1+" p2:"+p2+" prosli smo u append prolonged");
+		     }
+		  
+		     //If there is a docked dock, don't prolong the tween, we are docking.
+		     if(docked_dock!=null) return;
+		     else 
+		     {
+		         //trace ("docked dock je null");
+		     }	  
+		 
+		     var time:Number=game.tween_time;		
+		 
+		     //Let's detach the old prolonged_tween here, so we can attach a new one
+		     var all:Array = timeline.getChildren();
+		     if(all.indexOf(this.prolonged_tween)!=-1)
+		     {
+ 		         //trace("Prolonged tween je: "+this.prolonged_tween);
+ 		         //trace("indexOf it is: "+all.indexOf(this.prolonged_tween));
+ 	        
+ 		         timeline.remove(this.prolonged_tween);
+ 		         this.prolonged_tween=null;
 		   
-		  }
-		  else 
-		  {  
-		      //Don't do anything, there is no prolonged tween to erase anyway
-		  }
+		     }
+		     else 
+		     {  
+		         //Don't do anything, there is no prolonged tween to erase anyway
+		     }
 		 
-		  //Calculate the prolonged tween's last point to tween to. Avoid coasts and docks
-		  var c:Array = game.calculate_prolonged_point(p1.x, p1.y, p2.x, p2.y);
+		     //Calculate the prolonged tween's last point to tween to. Avoid coasts and docks
+		     var c:Array = game.calculate_prolonged_point(p1.x, p1.y, p2.x, p2.y);
 		 
-		  //Assign the prolonged tween here, so later we can find and detach it and 
-		  //attach a potential new one 
-		  this.prolonged_tween=new TweenLite(this , 
-		 							         time*c[2],												    
-		 							         {x:c[0],
-											  y:c[1],
-		                                      ease:Linear.easeNone,
-					                   	      onComplete:done
-					 				         }													
-			 	     				        );
+		     //Assign the prolonged tween here, so later we can find and detach it and 
+		     //attach a potential new one 
+		     this.prolonged_tween=new TweenLite(this , 
+		 							           time*c[2],												    
+		     						           {x:c[0],
+		 									    y:c[1],
+		                                        ease:Linear.easeNone,
+		 			                   	        onComplete:done
+		 			 				           }													
+		 	 	     				          );
 		 		
-		   timeline.append(this.prolonged_tween);				
-			
-		}
+		     timeline.append(this.prolonged_tween);				
+		 }
 		
-		//Append tween and its associated line graphics to the array 
-		//trajectoryLines_indices
-		private function append_trajectoryLine_index(line_par:MovieClip,index:Number):void
-		{
-			//trace("append_trajectoryLine_index fja");
-			//trace("line_par je: "+line_par);
-			trace("index traj line indexa je: "+index);
-			var new_couple:Object={lin:line_par,ind:index};
-			this.trajectoryLines_indices.push(new_couple);
+		 //Append tween and its associated line graphics to the array 
+		 //trajectoryLines_indices
+		 private function append_trajectoryLine_index(line_par:MovieClip,index:Number):void
+		 {
 			
+			//trace("index traj line indexa je: "+index);
+			var new_couple:Object={lin:line_par,ind:index};
+			this.trajectoryLines_indices.push(new_couple);			
 			
 		}
 		
@@ -516,23 +515,28 @@
 		//Erase the trajectory tween's trajectory line graphic segment
 		public function erase_line_graphic_for_earliest_tween():void
 		{			
-		    //trace("Oncomplete designated fuinction");return;
-			trace("erase_line_graphic_for_earliest_tween");
-			
-			
+		  
 			var index_par:Number=this.earliest_line_index;
 			var ar:Array=get_trajectoryLines_indices();
+			
+			if(ar.length==0) return;
+			//trace ("index_par je: "+index_par);
+			//trace ("ar je: "+ar);			
+			
 			var tl:MovieClip;			
-			
-			tl=ar[index_par].lin;				
-			
-			if(tl!=null)
+			if(true)
 			{
-			  game.delete_trajectory_segment_line(tl);
-			  tl=null;
-			}
+			  tl=ar[index_par].lin;				
 			
-			this.earliest_line_index++;
+			  if(tl!=null)
+			  {
+			    
+				tl.graphics.clear();
+			    tl=null;
+			  }
+			
+			  this.earliest_line_index++;
+			}
 			
 			
 		}
@@ -540,13 +544,13 @@
 		//Delete all trajectory lines for the boat
 		public function erase_all_trajectory_line_graphics():void
 		{
-			trace ("in erase all traj line graphics");
+			//trace ("in erase all traj line graphics");
 			var ar:Array=get_trajectoryLines_indices();
 			var tl:MovieClip;
 			for(var i:Number=0;i<ar.length;i++)
 			{				
 			  tl=ar[i].lin;
-			  game.delete_trajectory_segment_line(tl);
+			  tl.graphics.clear();			  
 			  tl=null;
 				
 			}	
@@ -554,7 +558,7 @@
 			this.trajectoryLines_indices=new Array();
 			this.earliest_line_index=0;
 			this.currentTrajectoryIndex=-1;
-			trace ("earliest line index je: "+this.earliest_line_index);
+			//trace ("earliest line index je: "+this.earliest_line_index);
 		}
 		
 		public function get_unloading_cargos():Array
