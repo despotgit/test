@@ -241,7 +241,7 @@
 		//Checking collisions and proximities between all boats on screen
 		private function check_boats_collisions_and_proximites(ev:Event):void
 		{			
-			//trace("beginning checking proximities and collisions");
+			//Examine boats against each other
 			for each(var b1:BoatController in all_boats)
 			{
 			    for each(var b2:BoatController in all_boats)
@@ -254,10 +254,9 @@
 			        	//check boats' proximities
 			        	if(b1.hitTestObject(b2))
 			        	{
-					        //trace("they are near colison");
+					        //Before checking, the display_alert for all boats is false
 							b1.display_alert=true;
-							b2.display_alert=true;
-						    
+							b2.display_alert=true;						    
 					    }						
 				    	else
 				    	{
@@ -276,6 +275,9 @@
 			    }
 			}
 			
+			//In this loop we will turn on the alert circles for all boats, if needed
+			//and reset the display_alert to false, so next time, we can check again
+			//and set it to true if needed
 			for each(var b:BoatController in all_boats)
 			{
 				if(b.display_alert) b.alertCircle.visible=true;

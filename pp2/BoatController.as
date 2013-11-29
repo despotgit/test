@@ -335,18 +335,24 @@
 						   
 					       //1 - yellow cargo
 					       //0 - red cargo
-					       for(var i:Number=0 ; i<unloading_cargos.length ; i++)
+						   var n:Number=unloading_cargos.length;
+					       for(var i:Number=0 ; i<n ; i++)
 					       {
-						     timeline.append(     new TweenLite(unloading_cargos[i] , 
-												    2 ,												    
-												    { 
-													 alpha:0,													 
+							 //trace("unloading one cargo");
+							 var currently_unloading_cargo:Cargo=unloading_cargos.pop();  
+						     timeline.append(     new TweenLite(currently_unloading_cargo , 
+							  					    2 ,												    
+						     					    { 
+						     						 alpha:0,													 
 		                                     		 ease:Linear.easeNone,
-													 onComplete:game.increment_and_refresh_points}													 
-													 ) );	
-						   
-						   
-					       }
+						      					     onComplete:update_score
+						     						}													 
+						      							 
+						         					 ) );	
+							
+						       
+						       
+					       }  
 						   
 					       //fake tween after which we orientate the ship to be ready for sailing off
 					       //and enable navigation again
@@ -420,6 +426,14 @@
 		     set_last_trajectory_rotation(get_last_trajectory_rotation()+sv);			
 		 }
 		 
+		 //This function removes the unloaded cargo from boat and updates game's score
+		 function update_score():void
+		 {
+			 game.increment_and_refresh_points();
+			 //removeChild(parameter1);
+			 
+			 
+		 }
 		 
 		 //Append the prolonging tween based on last two trajectory points		
 		 public function appendProlongedTween():void
