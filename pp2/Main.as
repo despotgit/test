@@ -16,8 +16,7 @@
 	import flash.text.TextField;
 	
 	import flash.display.DisplayObject;
-    import flash.display.DisplayObjectContainer;
-    //import PixelPerfectCollisionDetection;
+    import flash.display.DisplayObjectContainer;   
 	import com.aem.utils.HitTest;
 	
 	
@@ -31,6 +30,11 @@
 		//var timeline:TimelineLite;
 		var boat1:BoatController;
 		var boat2:BoatController;
+		var boat3:BoatController;
+		var boat4:BoatController;
+		var boat5:BoatController;
+		var boat6:BoatController;
+		var all_boats:Array;
 		var tween_time:Number=0.3;		
 		
 		//Points textbox and points var
@@ -59,8 +63,7 @@
 		public function Main()
 		{												
 		    //Variable for stopping the action when the collision occurs
-		    game_on=true;
-			
+		    game_on=true;			
 			
 			dock1 = (Dock1)(getChildByName("dock1_mc")); //162.35 , 70 mu je docking point
 			dock2 = (Dock2)(getChildByName("dock2_mc"));
@@ -76,14 +79,12 @@
 			init_island_coast();      //initialize island in the middle
 			init_docks();          //initialize docks
 			init_boats();          //initialize boats
-			init_points();         //initialize points	
+			init_score();         //initialize points	
 			
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
-			stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp); 		
+			stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp); 			
 			
-			//timeline=new TimelineLite();	
-			
-			addEventListener(Event.ENTER_FRAME, checkCollisionsAndProximites);
+			addEventListener(Event.ENTER_FRAME, check_boats_collisions_and_proximites);
 		}		
 		
 		function init_background():void
@@ -97,7 +98,7 @@
 		}
 		
 		//Initialize points and points text field
-		function init_points():void
+		function init_score():void
 		{
 			points=(TextField)(getChildByName("txt_points"));			
 			var format1:TextFormat = new TextFormat();						
@@ -200,48 +201,91 @@
 		{
 			//trace("test distance fje ,treba 5 da bude, ne 25: " + pp_maths.distance(new Point(0,0),new Point(3,4)));
 						
-			//Setting up two test boats
+            all_boats=new Array();						
+						
+			//Setting up couple of test boats
 			boat1 = generate_random_boat();					
 			addChildAt(boat1,  numChildren );         // bio na nivou 2			
 			boat1.x=150;			
 			boat1.y=150;				
 			boat1.set_last_trajectory_point(150,150);					
+			this.all_boats.push(boat1);
 			
 			boat2 = generate_random_boat();
 			addChildAt(boat2, numChildren  );        // nije bio ni na kom nivou
-			boat2.x=250;
-			boat2.y=250;	
-			boat2.set_last_trajectory_point(250,250);						
+			boat2.x=150;
+			boat2.y=200;	
+			boat2.set_last_trajectory_point(150,200);		
+			this.all_boats.push(boat2);
+			
+			var boat3:BoatController = generate_random_boat();					
+			addChildAt(boat3,  numChildren );         // bio na nivou 2			
+			boat3.x=150;			
+			boat3.y=250;				
+			boat3.set_last_trajectory_point(150,250);					
+			this.all_boats.push(boat3);
+			
+			var boat4 = generate_random_boat();
+			addChildAt(boat4, numChildren  );        // nije bio ni na kom nivou
+			boat4.x=150;
+			boat4.y=300;	
+			boat4.set_last_trajectory_point(150,300);		
+			this.all_boats.push(boat4);
+			
+			
+			
+			
+			
 		}							
 		
 		//Checking collisions and proximities between all boats on screen
-		private function checkCollisionsAndProximites(ev:Event):void
-		{
-			//var newColorTransform:ColorTransform;
-			//check boats' proximities
-			if(boat1.hitTestObject(boat2))
+		private function check_boats_collisions_and_proximites(ev:Event):void
+		{			
+			//trace("beginning checking proximities and collisions");
+			for each(var b1:BoatController in all_boats)
 			{
-				//trace("they are near colison");
-				boat1.alertCircle.visible=true;
-				boat2.alertCircle.visible=true;				
-			}						
-			else
-			{
-				boat1.alertCircle.visible = false;
-				boat2.alertCircle.visible = false;				
-			}
+			    for each(var b2:BoatController in all_boats)
+			    {
+			        if(b1===b2) 
+					{//trace("they're the same boat");
+				    }
+			        else
+			    	{				    
+			        	//check boats' proximities
+			        	if(b1.hitTestObject(b2))
+			        	{
+					        //trace("they are near colison");
+							b1.display_alert=true;
+							b2.display_alert=true;
+						    
+					    }						
+				    	else
+				    	{
+					    	
+				    	}
 	   		
-			//check boats' collisions
-			if(HitTest.intersects(boat1.boat_gra,boat2.boat_gra, this))
-			if(game_on)
-	  		{				
-				boat1.activateExplosion();
-				boat2.activateExplosion();
-				
-				game_on=false;
-	   		}							
+				    	//check boats' collisions
+				    	if(HitTest.intersects(b1.boat_gra,b2.boat_gra, this))
+				    	if(game_on)
+	  			    	{ 				
+	    			        b1.activateExplosion();
+						    b2.activateExplosion();
+						    game_on=false;
+			   		    }							
+			        }
+			    }
+			}
 			
-		}	
+			for each(var b:BoatController in all_boats)
+			{
+				if(b.display_alert) b.alertCircle.visible=true;
+				else b.alertCircle.visible=false;		
+				b.display_alert=false;
+			}
+			
+			
+			
+		}        	
 		
 		//Calculate the point of prolonged trajectory tween based on two last trajectory points
 		//Coasts and docks must be avoided.
@@ -518,7 +562,7 @@
 		}
 		
 		//Increment points variable
-		function increment_points():void
+		function increment_score():void
 		{
 			points_number++;
 		}
@@ -526,7 +570,7 @@
 		//Do both above
 		function increment_and_refresh_points():void
 		{
-			increment_points();
+			increment_score();
 			refresh_points();
 			
 		}

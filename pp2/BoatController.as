@@ -85,6 +85,9 @@
 		var unloading_cargos:Array;
 		var alertCircle:AlertCircle = new AlertCircle();
 		
+		//indicator whether the alert circle should be displayed or not
+		var display_alert:Boolean;
+		
 		public var ready_for_navigation:Boolean;
 		
 		//vars for explosion
@@ -102,6 +105,7 @@
 			this.alertCircle.x = 0;//-0.1;
 			this.alertCircle.y = 0;//-0.1;
 			this.alertCircle.visible = false;
+			this.display_alert=false;
 			
 		}		
 		
@@ -535,6 +539,7 @@
 			    tl=null;
 			  }
 			
+			  //Earliest line index will be the next one after the just erased one
 			  this.earliest_line_index++;
 			}
 			
