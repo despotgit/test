@@ -424,7 +424,7 @@
 		   if(game_on)
 		   if(navigated_boat!=null)
 		   {
-		     navigated_boat.appendProlongedTween();
+		     navigated_boat.append_prolonged_tween();
 		     
 		     navigated_boat=null;
 		   }

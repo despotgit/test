@@ -415,7 +415,9 @@
 			     else  //(if we HAVE hit a coast)
 			     {
 				     //prekinuti putanju (kao da je dugme misa pusteno)
-				     game.handleMouseUp(null);
+				     game.navigated_boat=null;
+					 game.handleMouseUp(null);
+					 
 					 
 				   
 			     }							
@@ -436,7 +438,7 @@
 		 }
 		 
 		 //Append the prolonging tween based on last two trajectory points		
-		 public function appendProlongedTween():void
+		 public function append_prolonged_tween():void
 		 {
 			 //return;
 		     //Next, we will remove the boat's prolonging tween and then add 
@@ -455,11 +457,7 @@
 		     }
 		  
 		     //If there is a docked dock, don't prolong the tween, we are docking.
-		     if(docked_dock!=null) return;
-		     else 
-		     {
-		         //trace ("docked dock je null");
-		     }	  
+		     if(docked_dock!=null) return;		  
 		 
 		     var time:Number=game.tween_time;		
 		 
@@ -488,8 +486,7 @@
 		 							           time*c[2],												    
 		     						           {x:c[0],
 		 									    y:c[1],
-		                                        ease:Linear.easeNone,
-		 			                   	        onComplete:done
+		                                        ease:Linear.easeNone
 		 			 				           }													
 		 	 	     				          );
 		 		
@@ -505,13 +502,8 @@
 			var new_couple:Object={lin:line_par,ind:index};
 			this.trajectoryLines_indices.push(new_couple);			
 			
-		}
+		}		
 		
-		private function done():void
-		{
-			//trace("done prolonged tweening");
-			
-		}			
 		
 		public function wipe_whole_motion_path():void
 		{
