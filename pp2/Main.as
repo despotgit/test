@@ -428,9 +428,10 @@
 		   if(navigated_boat!=null)
 		   if(navigated_boat.docked_dock==null) //Check that boat is not docked
 		   {
-		     navigated_boat.append_prolonged_tween();
+		       if(!(point_hits_docks(new Point(event.stageX,event.stageY))))   
+		       navigated_boat.append_prolonged_tween();
 		     
-		     navigated_boat=null;
+		       navigated_boat=null;
 		   }
 		   else trace("There is a docked_dock");
 		   else trace("navigated_boat is null");
@@ -449,7 +450,23 @@
 			
 		}		
 		
-		//function test collision with any dock and returns dock instance
+		//Return true if point hits any of the docks
+		function point_hits_docks(p:Point):Boolean
+		{
+			if(dock1.hitTestPoint(p.x,p.y)||
+			   dock2.hitTestPoint(p.x,p.y)||
+			   dock3.hitTestPoint(p.x,p.y)||
+			   dock4.hitTestPoint(p.x,p.y)||
+			   dock5.hitTestPoint(p.x,p.y)||
+			   dock6.hitTestPoint(p.x,p.y))
+			return true;
+			else return false;
+			
+			
+		}
+		
+		
+		//function tests collision with any dock and returns dock instance
 		//which the boat colided with
 		function test_docks_hit(bc:BoatController,p:Point):Dock
 		{
