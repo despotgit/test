@@ -417,8 +417,8 @@
 			   else  //(if we HAVE hit a coast)
 			   {
 				   //prekinuti putanju (kao da je dugme misa pusteno)
-				   game.navigated_boat=null;
-				   game.handleMouseUp(null);
+				   //game.navigated_boat=null;
+				   //game.handleMouseUp(null);
 							   
 			   }							
 		   }	      
