@@ -407,9 +407,8 @@
 					
 					   var lp:Point=get_last_trajectory_point();
 				       set_one_before_last_trajectory_point(lp.x,lp.y);
-			           set_last_trajectory_point(par_x, par_y);		
-					   
-					   //X je sad ovde
+			           set_last_trajectory_point(par_x, par_y);						   
+					
 					   set_last_trajectory_rotation(get_last_trajectory_rotation()+sv);			
 				   }
 				   		   
@@ -422,12 +421,10 @@
 				   game.handleMouseUp(null);
 							   
 			   }							
-		   }	       
+		   }	      
 		   
 		   timeline.play(); 
-		   
-		   //X bilo ovde
-		   //set_last_trajectory_rotation(get_last_trajectory_rotation()+sv);			
+		  		
 	   }
 		 
 	   //This function removes the unloaded cargo from boat and updates game's score
