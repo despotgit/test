@@ -422,16 +422,19 @@
 		
 		function handleMouseUp(event:MouseEvent):void 
 		{ 
+		   trace("In handle mouseup");
   		   stage.removeEventListener(MouseEvent.MOUSE_MOVE,startDrawing); 
 		   if(game_on)
 		   if(navigated_boat!=null)
+		   if(navigated_boat.docked_dock==null) //Check that boat is not docked
 		   {
 		     navigated_boat.append_prolonged_tween();
 		     
 		     navigated_boat=null;
 		   }
-		   else;
-		   else trace("Navigacija nije dozvoljena vise.");
+		   else trace("There is a docked_dock");
+		   else trace("navigated_boat is null");
+		   else trace("Navigacija nije dozvoljena vise(game_on is false)");
 		} 
 		
 		function test_coasts_hit(p:Point):Boolean
@@ -452,9 +455,10 @@
 		{
 			if(dock1.hitTestPoint(p.x,p.y))
 			{
-			    trace("dock1 hit");				
+			    trace("dock1 hit");								
 				bc.docked_dock=dock1;
-				bc.set_unloading_cargos();	                
+				bc.set_unloading_cargos();	                  
+				bc.docked_dock=null;
 				return dock1;
 				   
 			}
@@ -463,7 +467,8 @@
 			    trace("dock2 hit");				
 				bc.docked_dock=dock2;
 				bc.set_unloading_cargos();		
-				return dock1;
+				bc.docked_dock=null;
+				return dock2;
 				   
 			}
 			else if(dock3.hitTestPoint(p.x,p.y))
@@ -471,6 +476,7 @@
 			    trace("dock3 hit");				
 				bc.docked_dock=dock3;
 				bc.set_unloading_cargos();		
+				bc.docked_dock=null;
 				return dock3;
 				
 			}
@@ -479,6 +485,7 @@
 			    trace("dock4 hit");				
 				bc.docked_dock=dock4;
 				bc.set_unloading_cargos();		
+				bc.docked_dock=null;
 				return dock4;
 				
 			}
@@ -487,6 +494,7 @@
 			    trace("dock5 hit");				
 				bc.docked_dock=dock5;
 				bc.set_unloading_cargos();		
+				bc.docked_dock=null;
 				return dock5;
 				
 			}
@@ -495,6 +503,7 @@
 			    trace("dock6 hit");				
 				bc.docked_dock=dock6;
 				bc.set_unloading_cargos();		
+				bc.docked_dock=null;
 				return dock6;
 				
 			}

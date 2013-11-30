@@ -114,7 +114,9 @@
 			//trace("mouse koordi iz boatcontrollera su:"  + stage.mouseX + " i " + stage.mouseY);
 			//trace("boat controller's handleMouseDown metod accessed");
 			//tell the game controller that this is the currently navigated boat
-			this.game.navigated_boat=this;			
+			game.navigated_boat=this;			
+			
+			
 			graphics.clear();
 			
 			set_ready_for_new_path(true);
@@ -293,11 +295,14 @@
 				   //which will be named specially, so we can later -upon new mouse click on the boat and new 
 				   //trajectory point creation- remove those tweens that are  unnecessary.
 				   //those tweens can be named for example docking_tweens and unloading_tweens
-                   if(game.test_docks_hit(this,new Point(par_x,par_y))!=null)
+                   var potential_docked_dock:Dock=game.test_docks_hit(this,new Point(par_x,par_y));
+				   if(potential_docked_dock!=null)
 				   {
 					   //SECI OVDE AKO NEMA NISTA ZA ISTOVAR
+					   //Ako ima, dock the boat! :)
 				   	   if(get_unloading_cargos().length!=0)
-					   {						 
+					   {						
+					       docked_dock=potential_docked_dock;
 					       disable_navigation();
 						   
 					       erase_trajectory_line();
@@ -366,7 +371,7 @@
 						   							 onComplete:enable_navigation
 						   							 }													 
 						   							 ) );	
-                           game.navigated_boat=null;
+                           //game.navigated_boat=null;
 					   }        					     
 					   else
 					   {
@@ -437,7 +442,7 @@
 	   //Append the prolonging tween based on last two trajectory points		
 	   public function append_prolonged_tween():void
 	   {
-		   //return;
+		   trace("In append_prolonged_tween");
 		   //Next, we will remove the boat's prolonging tween and then add 
 	       //a new prolonging tween, for prolonged movement of boat. This is because after
 		   //manual navigation has been done, the boat should continue to move in that same
