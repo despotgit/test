@@ -9,6 +9,7 @@
 	import com.greensock.easing.*;
 	
 	import flash.display.Stage;
+	import flash.display.StageScaleMode; 
 	import flash.display.Sprite;
 	import flash.geom.Point;
 	import flash.geom.ColorTransform;
@@ -62,6 +63,10 @@
 		
 		public function Main()
 		{												
+		    
+		    var swfStage:Stage = this.stage; 
+            swfStage.scaleMode = StageScaleMode.NO_SCALE; 			
+			
 		    //Variable for stopping the action when the collision occurs
 		    game_on=true;			
 			
@@ -342,10 +347,6 @@
 		public function check_point_overlaps_docks_or_coasts(p:Point)
 		{
 			var overlaps:Boolean=false;
-			
-			
-			
-			
 		}
 		
 		//Erasing trajectory and setting initial (which is actually last in the array of
@@ -381,6 +382,7 @@
 		{   			
 		    //Don't allow navigation if boats already colided and game is already over
 			if(!game_on) return;
+			if(navigated_boat==null) return;
 			
 			var cur:Point = navigated_boat.get_last_trajectory_point();  //last traj. point mc-a
 			var newp:Point = new Point(stage.mouseX,stage.mouseY);  //

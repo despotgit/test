@@ -283,13 +283,13 @@
 		   //trace("sv je: " + sv);
 		   
 		   //Next "if" is because it sometimes happens that tween is too long(from the edge of
-		   //the screen to some point.....
+		   //the screen to some point.....	   
 		   if(pp_maths.distance(get_last_trajectory_point(), new Point(par_x,par_y) ) < (2*game.boat_tween_length))
 		   {
 			   //if we haven't hit a coast...... 
 			   if(!game.test_coasts_hit(new Point(par_x,par_y)))
 			   {
-				   //test here if we hitted a dock, in which case adding special tweens for docking and unloading
+				   //Test here if we hitted a dock, in which case adding special tweens for docking and unloading
 				   //which will be named specially, so we can later -upon new mouse click on the boat and new 
 				   //trajectory point creation- remove those tweens that are  unnecessary.
 				   //those tweens can be named for example docking_tweens and unloading_tweens
@@ -299,6 +299,7 @@
 				   	   if(get_unloading_cargos().length!=0)
 					   {						 
 					       disable_navigation();
+						   
 					       erase_trajectory_line();
 					   
 					       //so we have actually hit a dock, add special tweens
@@ -365,9 +366,8 @@
 						   							 onComplete:enable_navigation
 						   							 }													 
 						   							 ) );	
-                           
-					   }        
-					     
+                           game.navigated_boat=null;
+					   }        					     
 					   else
 					   {
 						     //trace("no cargos for unloading");						   
@@ -416,9 +416,7 @@
 			   }
 			   else  //(if we HAVE hit a coast)
 			   {
-				   //prekinuti putanju (kao da je dugme misa pusteno)
-				   //game.navigated_boat=null;
-				   //game.handleMouseUp(null);
+				   
 							   
 			   }							
 		   }	      
