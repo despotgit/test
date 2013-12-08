@@ -305,7 +305,7 @@
 		
 		//Calculate the point of prolonged trajectory tween based on two last trajectory points
 		//Coasts and docks must be avoided.
-		public function calculate_prolonged_point(x1,y1,x2,y2:Number):Array
+		public function calculate_prolonged_point(x1,y1,x2,y2:Number, initial:Boolean=false):Array
 		{
 			var p1:Point=new Point(x1,y1);
 			var p2:Point=new Point(x2,y2);
@@ -336,8 +336,9 @@
 			  (dock3.hitTestPoint(p.x+dx, p.y+dy, true))||
 			  (dock4.hitTestPoint(p.x+dx, p.y+dy, true))||
 			  (dock5.hitTestPoint(p.x+dx, p.y+dy, true))||
-			  (dock6.hitTestPoint(p.x+dx, p.y+dy, true))||false
-			  //(p.x-dx<0)||(p.y-dy<0)||(p.x-dx>585)||(p.y-dy>495) //conditions for edges
+			  (dock6.hitTestPoint(p.x+dx, p.y+dy, true))||
+			  (!initial&&((p.x-dx<0)||(p.y-dy<0)||(p.x-dx>585)||(p.y-dy>495))) //conditions for edges
+			  //false
 			  )
 			  {
 				  return [p.x,p.y,multiple];
@@ -449,6 +450,7 @@
 		   else trace("Navigacija nije dozvoljena vise(game_on is false)");
 		} 
 		
+		//Return true if point hits any of the shores
 		function test_coasts_hit(p:Point):Boolean
 		{
 			//so far testing only for one of the coasts
@@ -639,7 +641,7 @@
 			new_boat.set_last_trajectory_rotation(-30);
 			new_boat.set_last_trajectory_point(-30,550);		
 			new_boat.set_one_before_last_trajectory_point(-50,560);
-			new_boat.append_prolonged_tween();
+			new_boat.append_prolonged_tween(true);
 			this.all_boats.push(new_boat);
 			//trace("CHECKPOINT 2");
 			

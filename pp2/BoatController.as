@@ -443,12 +443,13 @@
 	   //Append the prolonging tween based on last two trajectory points		
 	   public function append_prolonged_tween(initial:Boolean=false):void
 	   {
+		   trace("In append_prolonged_tween");
 		   //If it is initial prolonged tween, put a pause at the beginning
 		   if (initial==true)
 		   {
-			   trace("Initial is true, this is the initial prolonged tween, so has extra tween");
+			   //trace("Initial is true, this is the initial prolonged tween, so has extra tween");
 			   var pause_tween:TweenLite=new TweenLite(this , 
-		 							           10,												    
+		 							           1,												    
 		     						           {x:this.x,
 		 									    y:this.y,
 		                                        ease:Linear.easeNone
@@ -457,9 +458,8 @@
 		 		
 		       timeline.append(pause_tween);	
 			   
-		   }
+		   }		   
 		   
-		   trace("In append_prolonged_tween");
 		   
 		   //Next, we will remove the boat's prolonging tween and then add 
 	       //a new prolonging tween, for prolonged movement of boat. This is because after
@@ -499,7 +499,7 @@
 		   }
 		 
 		   //Calculate the prolonged tween's last point to tween to. Avoid coasts and docks
-		   var c:Array = game.calculate_prolonged_point(p1.x, p1.y, p2.x, p2.y);
+		   var c:Array = game.calculate_prolonged_point(p1.x, p1.y, p2.x, p2.y, initial );
 		 
 		   //Assign the prolonged tween here, so later we can find and detach it and 
 		   //attach a potential new one 

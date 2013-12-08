@@ -83,7 +83,7 @@ package com.freeactionscript.effects.explosion
 			
 			for (var i:int = 0; i < _numberOfFireballs; i++)
 			{
-				trace("NUM OF FIREBALLS"+_numberOfFireballs);
+				//trace("NUM OF FIREBALLS"+_numberOfFireballs);
 				createFireball(targetX, targetY);
 			}
 			
