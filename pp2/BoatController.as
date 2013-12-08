@@ -106,7 +106,9 @@
 			this.alertCircle.y = 0;//-0.1;
 			this.alertCircle.visible = false;
 			this.display_alert=false;
-			
+			timeline=new TimelineLite();
+			wipe_whole_motion_path();
+			timeline.play();
 		}		
 		
 		function handleMouseDown(event:MouseEvent):void 
@@ -114,8 +116,7 @@
 			//trace("mouse koordi iz boatcontrollera su:"  + stage.mouseX + " i " + stage.mouseY);
 			//trace("boat controller's handleMouseDown metod accessed");
 			//tell the game controller that this is the currently navigated boat
-			game.navigated_boat=this;			
-			
+			game.navigated_boat=this;					
 			
 			graphics.clear();
 			
@@ -440,15 +441,33 @@
 	   }
 		 
 	   //Append the prolonging tween based on last two trajectory points		
-	   public function append_prolonged_tween():void
+	   public function append_prolonged_tween(initial:Boolean=false):void
 	   {
+		   //If it is initial prolonged tween, put a pause at the beginning
+		   if (initial==true)
+		   {
+			   trace("Initial is true, this is the initial prolonged tween, so has extra tween");
+			   var pause_tween:TweenLite=new TweenLite(this , 
+		 							           10,												    
+		     						           {x:this.x,
+		 									    y:this.y,
+		                                        ease:Linear.easeNone
+		 			 				           }													
+		 	 	     				          );
+		 		
+		       timeline.append(pause_tween);	
+			   
+		   }
+		   
 		   trace("In append_prolonged_tween");
+		   
 		   //Next, we will remove the boat's prolonging tween and then add 
 	       //a new prolonging tween, for prolonged movement of boat. This is because after
 		   //manual navigation has been done, the boat should continue to move in that same
 		   //direction.
-		   var p1:Point=get_one_before_last_trajectory_point();
-		   var p2:Point=get_last_trajectory_point();		
+		   var p1:Point = get_one_before_last_trajectory_point();
+		   var p2:Point = get_last_trajectory_point();		
+		   trace(p1.x+" "+p1.y+" "+p2.x+" "+p2.y);
 		  
 		   //If one of these points has x=y=0 that means the point is actually not yet set
 		   //It is not much possible that a point is set to exactly (0,0) :)
@@ -476,7 +495,7 @@
 		   }
 		   else 
 		   {  
-		       //Don't do anything, there is no prolonged tween to erase anyway
+		       //Don't do anything, there is no prolonged tween to erase
 		   }
 		 
 		   //Calculate the prolonged tween's last point to tween to. Avoid coasts and docks
@@ -492,7 +511,8 @@
 		 			 				           }													
 		 	 	     				          );
 		 		
-		   timeline.append(this.prolonged_tween);				
+		   timeline.append(this.prolonged_tween);	
+		  
 	   }
 		
 	   //Append tween and its associated line graphics to the array 

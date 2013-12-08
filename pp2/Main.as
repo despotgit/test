@@ -15,6 +15,8 @@
 	import flash.geom.ColorTransform;
 	import flash.display.MovieClip;
 	import flash.text.TextField;
+	import flash.utils.Timer;
+	import flash.events.TimerEvent;
 	
 	import flash.display.DisplayObject;
     import flash.display.DisplayObjectContainer;   
@@ -35,8 +37,18 @@
 		var boat4:BoatController;
 		var boat5:BoatController;
 		var boat6:BoatController;
+		var boat7:BoatController;
+		var boat8:BoatController;
 		var all_boats:Array;
 		var tween_time:Number=0.3;		
+		
+		//Array will contain random boats' positions and  data for their first prolonged
+		//tween, with which they will enter the screen
+		var boats_positions:Array; 
+		
+		//Timer for pushing new boats
+		var boat_push_timer:Timer;
+		
 		
 		//Points textbox and points var
 		var points:TextField;
@@ -77,20 +89,28 @@
 			dock5 = (Dock5)(getChildByName("dock5_mc"));
 			dock6 = (Dock6)(getChildByName("dock6_mc"));			
 			
-			init_background();     //initialize the background
-			init_left_coast();     //initialize left coast	
-			init_upper_coast();    //initialize upper coast
-			init_lower_coast();    //initialize lower coast	
-			init_island_coast();      //initialize island in the middle
-			init_docks();          //initialize docks
-			init_boats();          //initialize boats
-			init_score();         //initialize points	
+			init_background();         //initialize the background
+			init_left_coast();         //initialize left coast	
+			init_upper_coast();        //initialize upper coast
+			init_lower_coast();        //initialize lower coast	
+			init_island_coast();       //initialize island in the middle
+			init_docks();              //initialize docks
+			init_boats();              //initialize boats			
+			init_score();              //initialize points	
+			init_boat_push_timer();    //initialize timer for introducing new boats to the map 
+			trace("After inits");
 			
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
 			stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp); 			
-			
+						
 			addEventListener(Event.ENTER_FRAME, check_boats_collisions_and_proximites);
+			
+			
+						
+			
 		}		
+		
+		
 		
 		function init_background():void
 		{
@@ -114,8 +134,7 @@
 			points_number=0;
 
             points.defaultTextFormat=format1;
-			points.htmlText=(String)("<b>"+points_number+"</b>");			
-			trace("BOLD OR NOT "+format1.bold);			
+			points.htmlText=(String)("<b>"+points_number+"</b>");								
 		}
 		
 		//Initialize left coast on screen
@@ -203,44 +222,34 @@
 		
 		//Initialize boats on screen
 		function init_boats():void
-		{
-			//trace("test distance fje ,treba 5 da bude, ne 25: " + pp_maths.distance(new Point(0,0),new Point(3,4)));
+		{			
 						
             all_boats=new Array();						
 						
 			//Setting up couple of test boats
-			boat1 = generate_random_boat();					
-			addChildAt(boat1,  numChildren );         // bio na nivou 2			
-			boat1.x=150;			
-			boat1.y=150;				
-			boat1.set_last_trajectory_point(150,150);					
-			this.all_boats.push(boat1);
+			//boat1 = generate_random_boat();					
+			//addChildAt(boat1,  numChildren );         // bio na nivou 2			
+			//boat1.x=-30;			
+			//boat1.y=250;				
+			//boat1.set_last_trajectory_point(-30,250);					
+			//this.all_boats.push(boat1);
 			
-			boat2 = generate_random_boat();
-			addChildAt(boat2, numChildren  );        // nije bio ni na kom nivou
-			boat2.x=150;
-			boat2.y=200;	
-			boat2.set_last_trajectory_point(150,200);		
-			this.all_boats.push(boat2);
+			//boat2 = generate_random_boat();
+			//addChildAt(boat2, numChildren  );        // nije bio ni na kom nivou
+			//boat2.x=-30;
+			//boat2.y=300;	
+			//boat2.set_last_trajectory_point(-30,300);		
+			//this.all_boats.push(boat2);			
 			
-			var boat3:BoatController = generate_random_boat();					
-			addChildAt(boat3,  numChildren );         // bio na nivou 2			
-			boat3.x=150;			
-			boat3.y=250;				
-			boat3.set_last_trajectory_point(150,250);					
-			this.all_boats.push(boat3);
-			
-			var boat4 = generate_random_boat();
-			addChildAt(boat4, numChildren  );        // nije bio ni na kom nivou
-			boat4.x=150;
-			boat4.y=300;	
-			boat4.set_last_trajectory_point(150,300);		
-			this.all_boats.push(boat4);
-			
-			
-			
-			
-			
+			//boat7 = generate_random_boat();
+			//addChildAt(boat7, numChildren  );        // nije bio ni na kom nivou
+			//boat7.x=-30;
+			//boat7.y=550;	
+			//boat7.set_last_trajectory_point(-30,550);		
+			//boat7.set_one_before_last_trajectory_point(-50,560);
+			//boat7.append_prolonged_tween(true);
+			//this.all_boats.push(boat7);
+									
 		}							
 		
 		//Checking collisions and proximities between all boats on screen
@@ -327,7 +336,8 @@
 			  (dock3.hitTestPoint(p.x+dx, p.y+dy, true))||
 			  (dock4.hitTestPoint(p.x+dx, p.y+dy, true))||
 			  (dock5.hitTestPoint(p.x+dx, p.y+dy, true))||
-			  (dock6.hitTestPoint(p.x+dx, p.y+dy, true))
+			  (dock6.hitTestPoint(p.x+dx, p.y+dy, true))||false
+			  //(p.x-dx<0)||(p.y-dy<0)||(p.x-dx>585)||(p.y-dy>495) //conditions for edges
 			  )
 			  {
 				  return [p.x,p.y,multiple];
@@ -428,7 +438,8 @@
 		   if(navigated_boat!=null)
 		   if(navigated_boat.docked_dock==null) //Check that boat is not docked
 		   {
-		       if(!(point_hits_docks(new Point(event.stageX,event.stageY))))   
+		       if(!(point_hits_docks(new Point(event.stageX,event.stageY)))&&
+			      !(test_coasts_hit(new Point(event.stageX,event.stageY))))   
 		       navigated_boat.append_prolonged_tween();
 		     
 		       navigated_boat=null;
@@ -602,6 +613,36 @@
 		{
 			increment_score();
 			refresh_points();
+			
+		}
+		
+		function init_boat_push_timer():void
+		{
+			var timer:Timer = new Timer(3000);
+			timer.addEventListener(TimerEvent.TIMER, boat_timer_update);			
+			timer.start();
+		}
+		
+		
+		//This will push new boats to the stage every so seconds
+		function boat_timer_update(e:TimerEvent):void
+		{
+			//trace("CHECKPOINT 1");
+			
+			var new_boat:BoatController = generate_random_boat();
+			//return;
+			addChildAt(new_boat, numChildren  );        // nije bio ni na kom nivou
+			new_boat.x=-30;
+			new_boat.y=550;	
+			new_boat.y=550;	
+			new_boat.rotation=-30;
+			new_boat.set_last_trajectory_rotation(-30);
+			new_boat.set_last_trajectory_point(-30,550);		
+			new_boat.set_one_before_last_trajectory_point(-50,560);
+			new_boat.append_prolonged_tween();
+			this.all_boats.push(new_boat);
+			//trace("CHECKPOINT 2");
+			
 			
 		}
 
