@@ -507,13 +507,27 @@
 		 							           time*c[2],												    
 		     						           {x:c[0],
 		 									    y:c[1],
-		                                        ease:Linear.easeNone
+		                                        ease:Linear.easeNone,
+												onComplete:after_prolonged_tween,
+												onCompleteParams:[c[3]]
 		 			 				           }													
 		 	 	     				          );
 		 		
 		   timeline.append(this.prolonged_tween);	
 		  
 	   }
+	   
+	   //Function which applies after boat finishes prolonged tween
+	   private function after_prolonged_tween(param1:Boolean):void
+	   {
+		   if(param1)
+		   {
+		       game.removeChild(this);
+			   trace("Should be deleted");
+		   }
+		   
+	   }
+	   
 		
 	   //Append tween and its associated line graphics to the array 
 	   //trajectoryLines_indices

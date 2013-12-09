@@ -337,11 +337,15 @@
 			  (dock4.hitTestPoint(p.x+dx, p.y+dy, true))||
 			  (dock5.hitTestPoint(p.x+dx, p.y+dy, true))||
 			  (dock6.hitTestPoint(p.x+dx, p.y+dy, true))||
-			  (!initial&&((p.x-dx<0)||(p.y-dy<0)||(p.x-dx>585)||(p.y-dy>495))) //conditions for edges
+			  (!initial&&((p.x-dx<0)||(p.y-dy<0)||(p.x-dx>665)||(p.y-dy>550))) //conditions for edges
 			  //false
 			  )
 			  {
-				  return [p.x,p.y,multiple];
+				  var went_off_screen:Boolean=false;
+				  if(!initial&&((p.x-dx<0)||(p.y-dy<0)||(p.x-dx>665)||(p.y-dy>550)))
+				  went_off_screen=true;
+				  
+				  return [p.x,p.y,multiple, went_off_screen];
 		      }
 			  else
 			  {
@@ -351,7 +355,7 @@
 			  }
 			} 
 			
-			return [p.x, p.y, multiple];
+			return [p.x, p.y, multiple, false];
 			
 		}
 		
@@ -632,7 +636,7 @@
 			//trace("CHECKPOINT 1");
 			
 			var new_boat:BoatController = generate_random_boat();
-			//return;
+			
 			addChildAt(new_boat, numChildren  );        // nije bio ni na kom nivou
 			new_boat.x=-30;
 			new_boat.y=550;	
