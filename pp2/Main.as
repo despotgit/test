@@ -620,7 +620,7 @@
 		
 		function init_boat_push_timer():void
 		{
-			var timer:Timer = new Timer(3000);
+			var timer:Timer = new Timer(10000);
 			timer.addEventListener(TimerEvent.TIMER, boat_timer_update);			
 			timer.start();
 		}
