@@ -290,7 +290,7 @@
 		   if(pp_maths.distance(get_last_trajectory_point(), new Point(par_x,par_y) ) < (2*game.boat_tween_length))
 		   {
 			   //if we haven't hit a coast...... 
-			   if(!game.test_coasts_hit(new Point(par_x,par_y)))
+			   if(!game.test_coasts_edges_hit(new Point(par_x,par_y)))
 			   {
 				   //Test here if we hitted a dock, in which case adding special tweens for docking and unloading
 				   //which will be named specially, so we can later -upon new mouse click on the boat and new 
@@ -584,6 +584,7 @@
 			  //Earliest line index will be the next one after the just erased one
 			  this.earliest_line_index++;
 			}
+			
 			
 			
 		}

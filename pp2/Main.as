@@ -467,6 +467,22 @@
 			
 		}		
 		
+		//Return true if point hits any of the shores
+		function test_coasts_edges_hit(p:Point):Boolean
+		{
+			//so far testing only for one of the coasts
+			if(left_coast.hitTestPoint(p.x, p.y, true)||
+			   upper_coast.hitTestPoint(p.x, p.y, true)||
+			   lower_coast.hitTestPoint(p.x, p.y, true)||
+			   island_coast.hitTestPoint(p.x, p.y, true)||
+			   p.x<0||
+			   p.y<0
+			  )
+			return true;
+			else return false;		
+			
+		}
+		
 		//Return true if point hits any of the docks
 		function point_hits_docks(p:Point):Boolean
 		{
