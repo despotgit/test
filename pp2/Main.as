@@ -476,7 +476,9 @@
 			   lower_coast.hitTestPoint(p.x, p.y, true)||
 			   island_coast.hitTestPoint(p.x, p.y, true)||
 			   p.x<0||
-			   p.y<0
+			   p.y<0||
+			   (p.x>665)||
+			   (p.y>550)
 			  )
 			return true;
 			else return false;		
