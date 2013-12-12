@@ -612,7 +612,7 @@
 			  boatie = new Cruiser(this, colors);		
 			}			
 			
-			return boatie;					
+			return new Cruiser(this,[0,1,0,1]);					
 		}
 		
 		function randomNumber(low:Number=0, high:Number=1):Number
@@ -642,7 +642,7 @@
 		
 		function init_boat_push_timer():void
 		{
-			var timer:Timer = new Timer(10000);
+			var timer:Timer = new Timer(5000);
 			timer.addEventListener(TimerEvent.TIMER, boat_timer_update);			
 			timer.start();
 		}
@@ -655,10 +655,10 @@
 			
 			var new_boat:BoatController = generate_random_boat();
 			
-			addChildAt(new_boat, numChildren  );        // nije bio ni na kom nivou
+			addChild(new_boat);        // nije bio ni na kom nivou
 			new_boat.x=-30;
 			new_boat.y=550;	
-			new_boat.y=550;	
+			
 			new_boat.rotation=-30;
 			new_boat.set_last_trajectory_rotation(-30);
 			new_boat.set_last_trajectory_point(-30,550);		

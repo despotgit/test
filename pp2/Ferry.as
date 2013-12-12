@@ -65,11 +65,7 @@
 				  }
 				
 			this.game=par;
-			this.timeline = new TimelineLite();
-			timeline.autoRemoveChildren=true;
-			this.addEventListener(MouseEvent.MOUSE_DOWN,handleMouseDown); 
-			//this.addEventListener(MouseEvent.MOUSE_UP,handleMouseUp); 
-			ready_for_new_path=true;			
+				
 			
 			// constructor code
 		}
