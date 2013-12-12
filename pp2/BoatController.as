@@ -107,11 +107,11 @@
 			this.alertCircle.visible = false;
 			this.display_alert=false;
 			timeline=new TimelineLite();
-			wipe_whole_motion_path();
+			
 			timeline.play();
 			
 			this.addEventListener(MouseEvent.MOUSE_DOWN,handleMouseDown); 			
-			//ready_for_new_path=true;		
+			
 		}		
 		
 		function handleMouseDown(event:MouseEvent):void 
