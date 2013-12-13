@@ -3,7 +3,8 @@
 	import flash.display.MovieClip;
 	import flash.display.Sprite;	
 	
-	import com.greensock.*;
+	import com.greensock.TimelineLite;
+	import com.greensock.TweenLite;
 	import com.greensock.easing.*;
 	
 	//import flash.events.MouseEvent;
@@ -17,23 +18,43 @@
 		{
 			timeline = new TimelineLite();
 			// constructor code					
-			AnimateCircle();
+			
 		}
 		
 		public function AnimateCircle()
 		{						
-			for(var i:Number=0;i<1000;i++)
-			{
-			  timeline.append(new TweenLite(this,0.5,{scaleX:1.5, 
-										              scaleY:1.5, 												   
-												      ease:Linear.easeNone} ));	
-												  
-			  timeline.append(new TweenLite(this,0.5,{scaleX:1, 
-										              scaleY:1, 												   
-												      ease:Linear.easeNone} ));
-			} 
 			
+			timeline.append(new TweenLite(this,0.5,{scaleX:1.5, 
+										            scaleY:1.5, 												   
+												    ease:Linear.easeNone,
+													onComplete:AddShrinkTween} ));	
 			timeline.play();
 		}		
+		
+		public function StopAnimating()
+		{
+			timeline.stop();
+		}
+		
+		public function ContinueAnimating()
+		{
+			timeline.play();
+		}
+		
+		public function AddEnlargeTween()
+		{
+		    timeline.append(new TweenLite(this,0.5,{scaleX:1.5, 
+										              scaleY:1.5, 												   
+												      ease:Linear.easeNone,
+													  onComplete:AddShrinkTween} ));	
+		}
+		
+		public function AddShrinkTween()
+		{
+		    timeline.append(new TweenLite(this,0.5,{scaleX:1, 
+										              scaleY:1, 												   
+												      ease:Linear.easeNone,
+													  onComplete:AddEnlargeTween} ));
+		}
 	}	
 }

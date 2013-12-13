@@ -226,29 +226,7 @@
 						
             all_boats=new Array();						
 						
-			//Setting up couple of test boats
-			//boat1 = generate_random_boat();					
-			//addChildAt(boat1,  numChildren );         // bio na nivou 2			
-			//boat1.x=-30;			
-			//boat1.y=250;				
-			//boat1.set_last_trajectory_point(-30,250);					
-			//this.all_boats.push(boat1);
 			
-			//boat2 = generate_random_boat();
-			//addChildAt(boat2, numChildren  );        // nije bio ni na kom nivou
-			//boat2.x=-30;
-			//boat2.y=300;	
-			//boat2.set_last_trajectory_point(-30,300);		
-			//this.all_boats.push(boat2);			
-			
-			//boat7 = generate_random_boat();
-			//addChildAt(boat7, numChildren  );        // nije bio ni na kom nivou
-			//boat7.x=-30;
-			//boat7.y=550;	
-			//boat7.set_last_trajectory_point(-30,550);		
-			//boat7.set_one_before_last_trajectory_point(-50,560);
-			//boat7.append_prolonged_tween(true);
-			//this.all_boats.push(boat7);
 									
 		}							
 		
@@ -294,8 +272,19 @@
 			//and set it to true if needed
 			for each(var b:BoatController in all_boats)
 			{
-				if(b.display_alert) b.alertCircle.visible=true;
-				else b.alertCircle.visible=false;		
+				
+				if(b.display_alert) 
+				{
+				    b.alertCircle.visible=true;
+					b.alertCircle.ContinueAnimating();
+				}
+				else
+			    {
+				    b.alertCircle.visible=false;		
+					b.alertCircle.StopAnimating();
+					
+				}
+				
 				b.display_alert=false;
 			}
 			
@@ -612,7 +601,7 @@
 			  boatie = new Cruiser(this, colors);		
 			}			
 			
-			return new Cruiser(this,[0,1,0,1]);					
+			return boatie;
 		}
 		
 		function randomNumber(low:Number=0, high:Number=1):Number
@@ -655,6 +644,7 @@
 			
 			var new_boat:BoatController = generate_random_boat();
 			
+			new_boat
 			addChild(new_boat);        // nije bio ni na kom nivou
 			new_boat.x=-30;
 			new_boat.y=550;	
@@ -667,6 +657,21 @@
 			this.all_boats.push(new_boat);
 			//trace("CHECKPOINT 2");
 			
+			
+		}
+		
+		function delete_boat(b:BoatController):void
+		{
+			removeChild(b);
+			var new_all_boats:Array=new Array();
+			for(var i:Number=0; i<all_boats.length; i++)
+			{
+				var b2:BoatController=all_boats[i];
+				if(b2==b);
+				else new_all_boats.push(b2);
+				
+			}
+			all_boats=new_all_boats;
 			
 		}
 

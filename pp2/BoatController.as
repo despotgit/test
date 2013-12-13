@@ -83,7 +83,7 @@
 										  //upon next mouse drag, and last_motion_point set to new point.
 		
 		var unloading_cargos:Array;
-		var alertCircle:AlertCircle = new AlertCircle();
+		var alertCircle:AlertCircle;
 		
 		//indicator whether the alert circle should be displayed or not
 		var display_alert:Boolean;
@@ -101,14 +101,17 @@
 		
 		public function init_boat():void
 		{						
+		    timeline=new TimelineLite();
+			alertCircle=new AlertCircle();
 			this.addChild(alertCircle);
 			this.alertCircle.x = 0;//-0.1;
 			this.alertCircle.y = 0;//-0.1;
 			this.alertCircle.visible = false;
 			this.display_alert=false;
-			timeline=new TimelineLite();
+			alertCircle.AnimateCircle();
+			alertCircle.StopAnimating();
 			
-			timeline.play();
+			//not needed here actually: timeline.play();
 			
 			this.addEventListener(MouseEvent.MOUSE_DOWN,handleMouseDown); 			
 			
@@ -525,7 +528,8 @@
 	   {
 		   if(param1)
 		   {
-		       game.removeChild(this);
+		       game.delete_boat(this);
+			   
 			   trace("Should be deleted");
 		   }
 		   
