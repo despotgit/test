@@ -616,6 +616,12 @@
 			//trace ("earliest line index je: "+this.earliest_line_index);
 		}
 		
+		public function stop_animating()
+		{
+			timeline.stop();
+			
+		}
+		
 		public function get_unloading_cargos():Array
 		{
 			return unloading_cargos;

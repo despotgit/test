@@ -47,7 +47,7 @@
 		var boats_positions:Array; 
 		
 		//Timer for pushing new boats
-		var boat_push_timer:Timer;
+		var boatPushTimer:Timer;
 		
 		
 		//Points textbox and points var
@@ -71,7 +71,8 @@
 		var lower_coast:LowerCoast;
 		var island_coast:IslandCoast;
 		
-		//boats......TODO
+		//game over animation
+		var gameOver:GameOver;
 		
 		public function Main()
 		{												
@@ -261,7 +262,8 @@
 	  			    	{ 				
 	    			        b1.activateExplosion();
 						    b2.activateExplosion();
-						    game_on=false;
+						    game_over();
+							
 			   		    }							
 			        }
 			    }
@@ -631,9 +633,9 @@
 		
 		function init_boat_push_timer():void
 		{
-			var timer:Timer = new Timer(5000);
-			timer.addEventListener(TimerEvent.TIMER, boat_timer_update);			
-			timer.start();
+			boatPushTimer = new Timer(5000);
+			boatPushTimer.addEventListener(TimerEvent.TIMER, boat_timer_update);			
+			boatPushTimer.start();
 		}
 		
 		
@@ -672,6 +674,24 @@
 				
 			}
 			all_boats=new_all_boats;
+			
+		}
+		
+		function game_over()
+		{
+			game_on=false;
+		    boatPushTimer.stop();
+		    for(var i:Number=0; i<all_boats.length; i++)
+		    {
+			    var bo:BoatController=all_boats[i];
+				bo.stop_animating();
+			    					
+		    }
+			
+			gameOver=new GameOver();
+			gameOver.x=310;
+			gameOver.y=270;
+			addChild(gameOver);
 			
 		}
 
