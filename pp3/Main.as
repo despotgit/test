@@ -47,8 +47,7 @@
 		var boats_positions:Array; 
 		
 		//Timer for pushing new boats
-		var boatPushTimer:Timer;
-		
+		var boatPushTimer:Timer;		
 		
 		//Points textbox and points var
 		var points:TextField;
@@ -98,7 +97,9 @@
 			init_docks();              //initialize docks
 			init_boats();              //initialize boats			
 			init_score();              //initialize points	
-			init_boat_push_timer();    //initialize timer for introducing new boats to the map 
+			//init_boat_push_timer();
+			add_new_boat(null);        //Add the first boat to the scene
+			start_boat_push_timer(10);    //initialize timer for introducing new boats to the map 
 			trace("After inits");
 			
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
@@ -270,8 +271,7 @@
 			//and reset the display_alert to false, so next time, we can check again
 			//and set it to true if needed
 			for each(var b:BoatController in all_boats)
-			{
-				
+			{				
 				if(b.display_alert) 
 				{
 				    b.alertCircle.visible=true;
@@ -280,15 +280,10 @@
 				else
 			    {
 				    b.alertCircle.visible=false;		
-					b.alertCircle.StopAnimating();
-					
-				}
-				
+					b.alertCircle.StopAnimating();					
+				}				
 				b.display_alert=false;
-			}
-			
-			
-			
+			}			
 		}        	
 		
 		//Calculate the point of prolonged trajectory tween based on two last trajectory points
@@ -375,10 +370,8 @@
 		public function erase_trajectory_for_navigated_boat():void 
 		{   		
 		    navigated_boat.erase_all_trajectory_line_graphics();
-		    return;		    
-			
-		}
-		
+		    return;				
+		}		
 
         //From here we propagate event to the boat and have it add appropriate tween(s)
 		function startDrawing(event:MouseEvent):void 
@@ -414,18 +407,16 @@
 				}
 				else
 				{
-				  trace("Navigacija nije dozvoljena vise.");
+				  //trace("Navigacija nije dozvoljena vise.");
 				}
 			    
 				//last trajectory rotation will be set in the add_tween method
-			}		   
-		   
-		   
+			}			
 		}
 		
 		function handleMouseUp(event:MouseEvent):void 
 		{ 
-		   trace("In handle mouseup");
+		   //trace("In handle mouseup");
   		   stage.removeEventListener(MouseEvent.MOUSE_MOVE,startDrawing); 
 		   if(game_on)
 		   if(navigated_boat!=null)
@@ -437,9 +428,9 @@
 		     
 		       navigated_boat=null;
 		   }
-		   else trace("There is a docked_dock");
-		   else trace("navigated_boat is null");
-		   else trace("Navigacija nije dozvoljena vise(game_on is false)");
+		   else;// trace("There is a docked_dock");
+		   else;// trace("navigated_boat is null");
+		   else;// trace("Navigacija nije dozvoljena vise(game_on is false)");
 		} 
 		
 		//Return true if point hits any of the shores
@@ -470,7 +461,6 @@
 			  )
 			return true;
 			else return false;		
-			
 		}
 		
 		//Return true if point hits any of the docks
@@ -484,8 +474,6 @@
 			   dock6.hitTestPoint(p.x,p.y))
 			return true;
 			else return false;
-			
-			
 		}
 		
 		
@@ -500,7 +488,6 @@
 				bc.set_unloading_cargos();	                  
 				bc.docked_dock=null;
 				return dock1;
-				   
 			}
 			else if(dock2.hitTestPoint(p.x,p.y))
 			{
@@ -509,7 +496,6 @@
 				bc.set_unloading_cargos();		
 				bc.docked_dock=null;
 				return dock2;
-				   
 			}
 			else if(dock3.hitTestPoint(p.x,p.y))
 			{
@@ -518,7 +504,6 @@
 				bc.set_unloading_cargos();		
 				bc.docked_dock=null;
 				return dock3;
-				
 			}
 			else if(dock4.hitTestPoint(p.x,p.y))
 			{
@@ -527,7 +512,6 @@
 				bc.set_unloading_cargos();		
 				bc.docked_dock=null;
 				return dock4;
-				
 			}
 			else if(dock5.hitTestPoint(p.x,p.y))
 			{
@@ -536,7 +520,6 @@
 				bc.set_unloading_cargos();		
 				bc.docked_dock=null;
 				return dock5;
-				
 			}
 			else if(dock6.hitTestPoint(p.x,p.y))
 			{
@@ -545,15 +528,13 @@
 				bc.set_unloading_cargos();		
 				bc.docked_dock=null;
 				return dock6;
-				
 			}
 			else return null;
 		}
 		
 		//Draw a trajectory segment using the given line
 		function draw_trajectory_line(t:MovieClip, x1, y1, x2, y2:Number):void
-		{
-			
+		{			
 			addChildAt(t,1);
 			var lineThickness:uint = 2; 
             var lineColor:uint = 0.5*0xffffff; 			
@@ -561,8 +542,7 @@
 		    t.graphics.clear();
 		    t.graphics.lineStyle(lineThickness,lineColor); 
   			t.graphics.moveTo(x1,y1); 	
-		    t.graphics.lineTo(x2,y2);   //trace("t1 drawn");					
-			
+		    t.graphics.lineTo(x2,y2);   //trace("t1 drawn");			
 			
 		}	
 		
@@ -618,32 +598,47 @@
 		function increment_score():void
 		{
 			points_number++;
+			switch(points_number)
+			{
+			    case 20: stop_boat_push_timer(); start_boat_push_timer(9); break;
+			    case 40: stop_boat_push_timer(); start_boat_push_timer(8); break;
+			    case 60: stop_boat_push_timer(); start_boat_push_timer(7); break;
+			    case 80: stop_boat_push_timer(); start_boat_push_timer(6); break;
+			    case 100: stop_boat_push_timer(); start_boat_push_timer(5); break;
+			    case 120: stop_boat_push_timer(); start_boat_push_timer(4); break;
+			    case 140: stop_boat_push_timer(); start_boat_push_timer(3); break;
+			    case 160: stop_boat_push_timer(); start_boat_push_timer(2); break;
+			    case 180: stop_boat_push_timer(); start_boat_push_timer(1); break;
+			    case 200: stop_boat_push_timer(); start_boat_push_timer(0.8); break;
+			    case 220: stop_boat_push_timer(); start_boat_push_timer(0.7); break;
+			    case 240: stop_boat_push_timer(); start_boat_push_timer(0.6); break;
+			    case 260: stop_boat_push_timer(); start_boat_push_timer(0.5); break;
+			}
 		}
 		
 		//Do both above
 		function increment_and_refresh_points():void
 		{
 			increment_score();
-			refresh_points();
-			
+		    refresh_points();
+  			
 		}
 		
-		function init_boat_push_timer():void
+		//This function starts the timer for the adding of new boats
+		function start_boat_push_timer(t:Number):void
 		{
-			boatPushTimer = new Timer(5000);
-			boatPushTimer.addEventListener(TimerEvent.TIMER, boat_timer_update);			
+			boatPushTimer = new Timer(t*1000);
+			boatPushTimer.addEventListener(TimerEvent.TIMER, add_new_boat);			
 			boatPushTimer.start();
 		}
 		
-		
-		//This will push new boats to the stage every so seconds
-		function boat_timer_update(e:TimerEvent):void
+		//This will generate and push new boat to the stage every so seconds
+		function add_new_boat(e:TimerEvent):void
 		{
-			//trace("CHECKPOINT 1");
+			//trace("CHECKPOINT 1");			
 			
-			var new_boat:BoatController = generate_random_boat();
+			var new_boat:BoatController = generate_random_boat();			
 			
-			new_boat
 			addChild(new_boat);        // nije bio ni na kom nivou
 			new_boat.x=-30;
 			new_boat.y=550;	
@@ -654,11 +649,17 @@
 			new_boat.set_one_before_last_trajectory_point(-50,560);
 			new_boat.append_prolonged_tween(true);
 			this.all_boats.push(new_boat);
-			//trace("CHECKPOINT 2");
+			//trace("CHECKPOINT 2");	
 			
-			
+		}		
+		
+		//This function will stop the timer for adding new boats
+		function stop_boat_push_timer():void
+		{
+			boatPushTimer.stop();
 		}
 		
+		//Deleting the boat from stage and from the boats array
 		function delete_boat(b:BoatController):void
 		{
 			removeChild(b);

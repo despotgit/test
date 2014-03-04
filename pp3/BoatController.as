@@ -326,7 +326,7 @@
 					       var docking_trans_rotation:Number=pp_maths.find_transitional_rotation(get_last_trajectory_rotation(),docked_dock.get_unloading_boat_rotation());
 					   	   
 					       //this tween is getting the boat to the docking point
-						   trace("Adding tween for preparing to dock");
+						   //trace("Adding tween for preparing to dock");
 					       timeline.append(     new TweenLite(this , 
 						 						    time ,												    
 						 						    {x:docked_dock.docking_point.x, 
@@ -337,7 +337,7 @@
 						 							 
                            //this tween is getting the boat to the docked point													 
 						   
-						   trace("Adding tween for docking");
+						   //trace("Adding tween for docking");
 		                   timeline.append(     new TweenLite(this , 
 						 						    (time*2) ,												    
 						 						    {x:docked_dock.docked_point.x, 
@@ -449,7 +449,7 @@
 	   //Append the prolonging tween based on last two trajectory points		
 	   public function append_prolonged_tween(initial:Boolean=false):void
 	   {
-		   trace("In append_prolonged_tween");
+		   //trace("In append_prolonged_tween");
 		   //If it is initial prolonged tween, put a pause at the beginning
 		   if (initial==true)
 		   {
@@ -464,8 +464,7 @@
 		 		
 		       timeline.append(pause_tween);	
 			   
-		   }		   
-		   
+		   }		
 		   
 		   //Next, we will remove the boat's prolonging tween and then add 
 	       //a new prolonging tween, for prolonged movement of boat. This is because after
@@ -473,7 +472,7 @@
 		   //direction.
 		   var p1:Point = get_one_before_last_trajectory_point();
 		   var p2:Point = get_last_trajectory_point();		
-		   trace(p1.x+" "+p1.y+" "+p2.x+" "+p2.y);
+		   //trace(p1.x+" "+p1.y+" "+p2.x+" "+p2.y);
 		  
 		   //If one of these points has x=y=0 that means the point is actually not yet set
 		   //It is not much possible that a point is set to exactly (0,0) :)
@@ -528,9 +527,8 @@
 	   {
 		   if(param1)
 		   {
-		       game.delete_boat(this);
-			   
-			   trace("Should be deleted");
+		       game.delete_boat(this);			   
+			   //trace("Boat should be deleted");
 		   }
 		   
 	   }
