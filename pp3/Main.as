@@ -306,6 +306,9 @@
 			//tween last for
 			var multiple:Number=0;
 			
+			//first two little tweens are free for an initial tween, don't count them as off screen
+			var free:Number=3;
+			
 			for(var i:Number=0; i<50; i++)
 			{  			  
 			  if
@@ -320,9 +323,7 @@
 			  (dock4.hitTestPoint(p.x+dx, p.y+dy, true))||
 			  (dock5.hitTestPoint(p.x+dx, p.y+dy, true))||
 			  (dock6.hitTestPoint(p.x+dx, p.y+dy, true))||
-			  (!initial&&((p.x-dx<0)||(p.y-dy<0)||(p.x-dx>665)||(p.y-dy>550))) //conditions for out of screen
-			  //((p.x-dx<0)||(p.y-dy<0)||(p.x-dx>665)||(p.y-dy>550)) //conditions for out of screen
-			  //false
+			  (!initial&&((p.x-dx<0)||(p.y-dy<0)||(p.x-dx>665)||(p.y-dy>550))) //conditions for out of screen			  
 			  )
 			  {
 				  //Dock or island is hit, or the point is out of screen
@@ -334,6 +335,12 @@
 		      }
 			  else
 			  {
+				//for a initial, decrement the free little tweens counter
+				free--;
+				//if free little tweens are wasted, don't count this as initial any more
+				if(free==0)
+				initial=false;
+				
 			    p.x = p.x+dx;
 			    p.y = p.y+dy;  
 				multiple++;
