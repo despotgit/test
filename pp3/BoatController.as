@@ -708,6 +708,11 @@
 			
 		}
 		
+		public function stopTimeline()
+		{
+			this.timeline.stop();
+		}
+		
 		
 
 	}

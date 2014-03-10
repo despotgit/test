@@ -18,9 +18,12 @@
 	import flash.utils.Timer;
 	import flash.events.TimerEvent;
 	
+	import flash.display.SimpleButton;
+	
 	import flash.display.DisplayObject;
     import flash.display.DisplayObjectContainer;   
 	import com.aem.utils.HitTest;
+	
 	
 	
 	public class Main extends MovieClip
@@ -30,15 +33,16 @@
 		var boat_controller:BoatController;
 		var navigated_boat:BoatController;
 		var boat_tween_length:Number=20;  //this is the length of each boat tween
-		//var timeline:TimelineLite;
-		var boat1:BoatController;
-		var boat2:BoatController;
-		var boat3:BoatController;
-		var boat4:BoatController;
-		var boat5:BoatController;
-		var boat6:BoatController;
-		var boat7:BoatController;
-		var boat8:BoatController;
+		
+		var bck:Background;
+		//var boat1:BoatController;
+		//var boat2:BoatController;
+		//var boat3:BoatController;
+		//var boat4:BoatController;
+		//var boat5:BoatController;
+		//var boat6:BoatController;
+		//var boat7:BoatController;
+		//var boat8:BoatController;
 		var all_boats:Array;
 		var tween_time:Number=0.3;		
 		
@@ -60,6 +64,9 @@
 		var dock4:Dock4;
 		var dock5:Dock5;
 		var dock6:Dock6;
+		
+		//pause button
+		var pause_btn:SimpleButton;
 		
 		//have designated graphics here for each boat to draw trajectories
 		var boats_trajs:Array;	
@@ -97,7 +104,8 @@
 			init_docks();              //initialize docks
 			init_boats();              //initialize boats			
 			init_score();              //initialize points	
-			//init_boat_push_timer();
+			init_pause_button();              //initialize points
+			
 			add_new_boat(null);        //Add the first boat to the scene
 			start_boat_push_timer(10);    //initialize timer for introducing new boats to the map 
 			trace("After inits");
@@ -114,7 +122,9 @@
 		function init_background():void
 		{
 			//adding the background:
-			var bck:Background=new Background();
+			//var bck:Background=new Background();
+			bck=new Background();
+			
 			bck.x=0;
 			bck.y=0;
 			addChildAt(bck,0);	
@@ -667,6 +677,7 @@
 			
 			switch(pos)
 			{
+				//left side positions:		
 			    case 1: x_pos=-30; y_pos=550; rotation_pos=-30; //ltr_pos=-30; 
 				        ltp_pos = new Point(-30,550);
 				        obltp_pos=new Point(-50,560);break;
@@ -746,14 +757,33 @@
 		    for(var i:Number=0; i<all_boats.length; i++)
 		    {
 			    var bo:BoatController=all_boats[i];
-				bo.stop_animating();
-			    					
+				bo.stop_animating();			    					
 		    }
 			
 			gameOver=new GameOver();
 			gameOver.x=310;
 			gameOver.y=270;
-			addChild(gameOver);
+			addChild(gameOver);			
+		}
+		
+		//Register action for pause button
+		function init_pause_button()
+		{
+			pause_btn = (SimpleButton)(bck.getChildByName("pause_btn"));
+		    pause_btn.addEventListener(MouseEvent.MOUSE_DOWN, stopBoats);
+		}
+		
+		//Stop all boats
+		function stopBoats(event:MouseEvent)
+		{			
+			
+			for(var i:Number=0; i<all_boats.length; i++)
+			{
+				var b:BoatController=all_boats[i];
+			    b.stopTimeline();
+				
+			}
+			
 			
 		}
 
