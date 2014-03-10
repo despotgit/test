@@ -68,6 +68,9 @@
 		//pause button
 		var pause_btn:SimpleButton;
 		
+		//pause variable
+		var paused:Boolean=false;
+		
 		//have designated graphics here for each boat to draw trajectories
 		var boats_trajs:Array;	
 		
@@ -776,13 +779,21 @@
 		//Stop all boats
 		function stopBoats(event:MouseEvent)
 		{			
-			
+			if (!paused)
 			for(var i:Number=0; i<all_boats.length; i++)
 			{
 				var b:BoatController=all_boats[i];
-			    b.stopTimeline();
-				
+			    b.stopTimeline();		
+				paused=true;
 			}
+			else 
+			for(var i:Number=0; i<all_boats.length; i++)
+			{
+				var b:BoatController=all_boats[i];
+			    b.startTimeline();		
+				paused=false;
+			}
+			
 			
 			
 		}

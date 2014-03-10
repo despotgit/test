@@ -713,6 +713,11 @@
 			this.timeline.stop();
 		}
 		
+		public function startTimeline()
+		{
+			this.timeline.play();
+		}
+		
 		
 
 	}
