@@ -320,12 +320,14 @@
 			  (dock4.hitTestPoint(p.x+dx, p.y+dy, true))||
 			  (dock5.hitTestPoint(p.x+dx, p.y+dy, true))||
 			  (dock6.hitTestPoint(p.x+dx, p.y+dy, true))||
-			  (!initial&&((p.x-dx<0)||(p.y-dy<0)||(p.x-dx>665)||(p.y-dy>550))) //conditions for edges
+			  (!initial&&((p.x-dx<0)||(p.y-dy<0)||(p.x-dx>665)||(p.y-dy>550))) //conditions for out of screen
+			  //((p.x-dx<0)||(p.y-dy<0)||(p.x-dx>665)||(p.y-dy>550)) //conditions for out of screen
 			  //false
 			  )
 			  {
+				  //Dock or island is hit, or the point is out of screen
 				  var went_off_screen:Boolean=false;
-				  if(!initial&&((p.x-dx<0)||(p.y-dy<0)||(p.x-dx>665)||(p.y-dy>550)))
+				  if(!initial&&((p.x-dx<0)||(p.y-dy<0)||(p.x-dx>665)||(p.y-dy>550)))				
 				  went_off_screen=true;
 				  
 				  return [p.x,p.y,multiple, went_off_screen];
@@ -551,37 +553,7 @@
   		   graphics.clear(); 
 		}   
 
-        //this function returns a boat with random length and cargo on it
-        function generate_random_boat():BoatController
-		{
-			var len:Number = randomNumber(2,4);
-			var boatie:BoatController;
-			
-			//let's generate new boat's cargos colors array
-			var colors:Array=new Array();
-			
-			for(var i:Number=0 ; i<len ; i++)
-			{
-				//color is either 0 or 1, let's return a random value here
-				var ccolor:Number = randomNumber(0,1);				
-				colors[i]=ccolor;				
-			}
-			
-			if(len==2)
-			{
-			  boatie = new Yacht(this, colors);		
-			}
-			else if(len==3)
-			{
-			  boatie = new Ferry(this, colors);		
-			}
-			else if(len==4)
-			{
-			  boatie = new Cruiser(this, colors);		
-			}			
-			
-			return boatie;
-		}
+        
 		
 		function randomNumber(low:Number=0, high:Number=1):Number
         {
@@ -600,9 +572,12 @@
 			points_number++;
 			switch(points_number)
 			{
-			    case 20: stop_boat_push_timer(); start_boat_push_timer(9); break;
-			    case 40: stop_boat_push_timer(); start_boat_push_timer(8); break;
-			    case 60: stop_boat_push_timer(); start_boat_push_timer(7); break;
+			    case 10: stop_boat_push_timer(); start_boat_push_timer(7); break;
+			    case 20: stop_boat_push_timer(); start_boat_push_timer(4); break;
+			    case 30: stop_boat_push_timer(); start_boat_push_timer(1); break;
+				//case 20: stop_boat_push_timer(); start_boat_push_timer(9); break;
+			    //case 40: stop_boat_push_timer(); start_boat_push_timer(8); break;
+			    //case 60: stop_boat_push_timer(); start_boat_push_timer(7); break;
 			    case 80: stop_boat_push_timer(); start_boat_push_timer(6); break;
 			    case 100: stop_boat_push_timer(); start_boat_push_timer(5); break;
 			    case 120: stop_boat_push_timer(); start_boat_push_timer(4); break;
@@ -640,18 +615,100 @@
 			var new_boat:BoatController = generate_random_boat();			
 			
 			addChild(new_boat);        // nije bio ni na kom nivou
-			new_boat.x=-30;
-			new_boat.y=550;	
+				
 			
-			new_boat.rotation=-30;
-			new_boat.set_last_trajectory_rotation(-30);
-			new_boat.set_last_trajectory_point(-30,550);		
-			new_boat.set_one_before_last_trajectory_point(-50,560);
-			new_boat.append_prolonged_tween(true);
 			this.all_boats.push(new_boat);
+			new_boat.append_prolonged_tween(true);		
 			//trace("CHECKPOINT 2");	
 			
 		}		
+		
+		//this function returns a boat with random length and cargo on it
+        function generate_random_boat():BoatController
+		{
+			var len:Number = randomNumber(2,4);
+			var boatie:BoatController;
+			
+			//let's generate new boat's cargos colors array
+			var colors:Array=new Array();
+			
+			for(var i:Number=0 ; i<len ; i++)
+			{
+				//color is either 0 or 1, let's return a random value here
+				var ccolor:Number = randomNumber(0,1);				
+				colors[i]=ccolor;				
+			}
+			
+			if(len==2)
+			{
+			  boatie = new Yacht(this, colors);		
+			}
+			else if(len==3)
+			{
+			  boatie = new Ferry(this, colors);		
+			}
+			else if(len==4)
+			{
+			  boatie = new Cruiser(this, colors);		
+			}						
+			
+			var pos:Number = randomNumber(1,3);
+			trace("broj je: "+pos);
+			
+			var x_pos, y_pos, rotation_pos, ltr_pos:Number;
+			var ltp_pos, obltp_pos:Point;
+			
+			switch(pos)
+			{
+			    case 1: x_pos=-30; y_pos=550; rotation_pos=-30; //ltr_pos=-30; 
+				        ltp_pos = new Point(-30,550);
+				        obltp_pos=new Point(-50,560);break;
+						
+				case 2: x_pos=-30; y_pos=500; rotation_pos=-30; //ltr_pos=-30; 
+				        ltp_pos=new Point(-30,500);
+				        obltp_pos=new Point(-50,490);break;
+						
+				case 3: x_pos=-30; y_pos=300; rotation_pos=-30; //ltr_pos=-30; 
+				        ltp_pos=new Point(-30,300);
+				        obltp_pos=new Point(-50,310);break;
+						
+				case 4: x_pos=-30; y_pos=250; rotation_pos=-30; //ltr_pos=-90; 
+				        ltp_pos=new Point(-30,250);
+				        obltp_pos=new Point(-50,260);break;			        
+				
+				//right side positions:		
+				case 5: x_pos=-30; y_pos=550; rotation_pos=-30; //ltr_pos=-30; 
+				        ltp_pos=new Point(-30,550);
+				        obltp_pos=new Point(-50,560);break;
+						
+				case 6: x_pos=-30; y_pos=550; rotation_pos=-30; //ltr_pos=-30; 
+				        ltp_pos=new Point(-30,550);
+				        obltp_pos=new Point(-50,560);break;
+						
+				case 7: x_pos=-30; y_pos=550; rotation_pos=-30; //ltr_pos=-30; 
+				        ltp_pos=new Point(-30,550);
+				        obltp_pos=new Point(-50,560);break;
+						
+				case 8: x_pos=-30; y_pos=550; rotation_pos=-30; //ltr_pos=-30; 
+				        ltp_pos=new Point(-30,550);
+				        obltp_pos=new Point(-50,560);break;
+				
+			    	 
+			}		
+			
+			trace("x_pos: "+x_pos);
+			trace("y_pos: "+y_pos);
+			
+			boatie.x=x_pos;
+			boatie.y=y_pos;				
+			boatie.rotation=rotation_pos;
+			//boatie.set_last_trajectory_rotation(ltr_pos);
+			boatie.set_last_trajectory_point(ltp_pos.x, ltp_pos.y);		
+			boatie.set_one_before_last_trajectory_point(obltp_pos.x,obltp_pos.y);
+			
+			
+			return boatie;
+		}
 		
 		//This function will stop the timer for adding new boats
 		function stop_boat_push_timer():void
