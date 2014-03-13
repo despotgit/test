@@ -676,7 +676,7 @@
 			
 			var x_pos, y_pos, rotation_pos, ltr_pos:Number;
 			var ltp_pos, obltp_pos:Point;
-			//pos=5;
+			pos=10;
 			switch(pos)
 			{
 				//left side positions:		
@@ -701,13 +701,13 @@
 				        obltp_pos=new Point(-50,243);break;
 						
 				//right side positions:				
-				case 6: x_pos=670; y_pos=50; rotation_pos=116.56; 
-				        ltp_pos=new Point(670,50);
-				        obltp_pos=new Point(680,30);break;
+				case 6: x_pos=688; y_pos=18; rotation_pos=116.56; 
+				        ltp_pos=new Point(688,18);
+				        obltp_pos=new Point(690,10);break;
 						
-				case 7: x_pos=670; y_pos=50; rotation_pos=101.31; 
-				        ltp_pos=new Point(670,50);
-				        obltp_pos=new Point(674,30);break;
+				case 7: x_pos=685; y_pos=-25; rotation_pos=101.31; 
+				        ltp_pos=new Point(685,-25);
+				        obltp_pos=new Point(774,-470);break;
 						
 				case 8: x_pos=500; y_pos=-40; rotation_pos=90;  
 				        ltp_pos=new Point(500,-40);
@@ -717,9 +717,9 @@
 				        ltp_pos=new Point(490,-40);
 				        obltp_pos=new Point(500,-60);break;
 				
-				case 10:x_pos=670; y_pos=200; rotation_pos=153.4; 
-				        ltp_pos=new Point(670,200);
-				        obltp_pos=new Point(680,195);break;		
+				case 10:x_pos=690; y_pos=190; rotation_pos=153.4; 
+				        ltp_pos=new Point(690,190);
+				        obltp_pos=new Point(710,180);break;		
 				
 			    	 
 			}		
