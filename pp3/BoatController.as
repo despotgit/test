@@ -477,7 +477,7 @@
 		   //If one of these points has x=y=0 that means the point is actually not yet set
 		   //It is not much possible that a point is set to exactly (0,0) :)
 		   //there is probably a smarter way to detect if the point is not set, 
-		   //but for now, this is the easier dumber way, so leaving it as it is for now
+		   //but for now, this is the easier (also dumber) way, so leaving it as it is for now
 		     if ((p1.x==0 && p1.y==0)||(p2.x==0 && p2.y==0)) return;		  
 		   else 
 		   {//trace("p1:"+p1+" p2:"+p2+" prosli smo u append prolonged");
@@ -531,14 +531,12 @@
 			   //trace("Boat should be deleted");
 		   }
 		   
-	   }
-	   
+	   }	   
 		
 	   //Append tween and its associated line graphics to the array 
 	   //trajectoryLines_indices
 	   private function append_trajectoryLine_index(line_par:MovieClip,index:Number):void
-	   {
-			
+	   {			
 			//trace("index traj line indexa je: "+index);
 			var new_couple:Object={lin:line_par,ind:index};
 			this.trajectoryLines_indices.push(new_couple);			
@@ -565,8 +563,7 @@
 		
 		//Erase the trajectory tween's trajectory line graphic segment
 		public function erase_line_graphic_for_earliest_tween():void
-		{			
-		  
+		{					  
 			var index_par:Number=this.earliest_line_index;
 			var ar:Array=get_trajectoryLines_indices();
 			

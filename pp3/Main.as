@@ -35,14 +35,7 @@
 		var boat_tween_length:Number=20;  //this is the length of each boat tween
 		
 		var bck:Background;
-		//var boat1:BoatController;
-		//var boat2:BoatController;
-		//var boat3:BoatController;
-		//var boat4:BoatController;
-		//var boat5:BoatController;
-		//var boat6:BoatController;
-		//var boat7:BoatController;
-		//var boat8:BoatController;
+		
 		var all_boats:Array;
 		var tween_time:Number=0.3;		
 		
@@ -301,6 +294,8 @@
 		
 		//Calculate the point of prolonged trajectory tween based on two last trajectory points
 		//Coasts and docks must be avoided.
+		//x1,y1 are the one before last trajectory point
+		//x2,y2 are the last trajectory point
 		public function calculate_prolonged_point(x1,y1,x2,y2:Number, initial:Boolean=false):Array
 		{
 			var p1:Point=new Point(x1,y1);
@@ -314,13 +309,21 @@
 			var dx:Number=x2-x1;
 			var dy:Number=y2-y1;		
 			
+			//This variable will adjust the dx and dy proportionally so that their hipothenusis (length
+			//is equal to boat_tween_length
+			var adjustment_factor:Number=boat_tween_length/Math.sqrt(Math.pow(dx,2)+Math.pow(dy,2));
+			//Adjust the dx and dy
+			dx=dx*adjustment_factor;
+			dy=dy*adjustment_factor;
+			
+			
 			//This var is how many times is the prolonged bigger than regular trajectory tween
 			//so that we know how many times longer than regular tween should the prolonged 
 			//tween last for
 			var multiple:Number=0;
 			
 			//first two little tweens are free for an initial tween, don't count them as off screen
-			var free:Number=3;
+			var free:Number=7;
 			
 			for(var i:Number=0; i<50; i++)
 			{  			  
@@ -343,7 +346,7 @@
 				  var went_off_screen:Boolean=false;
 				  if(!initial&&((p.x-dx<0)||(p.y-dy<0)||(p.x-dx>665)||(p.y-dy>550)))				
 				  went_off_screen=true;
-				  
+				  trace("Multiple is: "+multiple);  
 				  return [p.x,p.y,multiple, went_off_screen];
 		      }
 			  else
@@ -359,7 +362,7 @@
 				multiple++;
 			  }
 			} 
-			
+			trace("Multiple is: "+multiple);
 			return [p.x, p.y, multiple, false];
 			
 		}
@@ -630,17 +633,13 @@
 		//This will generate and push new boat to the stage every so seconds
 		function add_new_boat(e:TimerEvent):void
 		{
-			//trace("CHECKPOINT 1");			
-			
+			//trace("CHECKPOINT 1");						
 			var new_boat:BoatController = generate_random_boat();			
 			
-			addChild(new_boat);        // nije bio ni na kom nivou
-				
+			addChild(new_boat);        // nije bio ni na kom nivou				
 			
 			this.all_boats.push(new_boat);
 			new_boat.append_prolonged_tween(true);		
-			//trace("CHECKPOINT 2");	
-			
 		}		
 		
 		//this function returns a boat with random length and cargo on it
@@ -672,47 +671,55 @@
 			  boatie = new Cruiser(this, colors);		
 			}						
 			
-			var pos:Number = randomNumber(1,3);
-			trace("broj je: "+pos);
+			var pos:Number = randomNumber(1,10);
+			trace("Position "+pos);
 			
 			var x_pos, y_pos, rotation_pos, ltr_pos:Number;
 			var ltp_pos, obltp_pos:Point;
-			
+			//pos=5;
 			switch(pos)
 			{
 				//left side positions:		
-			    case 1: x_pos=-30; y_pos=550; rotation_pos=-30; //ltr_pos=-30; 
+			    case 1: x_pos=-30; y_pos=550; rotation_pos=-26.6;
 				        ltp_pos = new Point(-30,550);
 				        obltp_pos=new Point(-50,560);break;
 						
-				case 2: x_pos=-30; y_pos=500; rotation_pos=-30; //ltr_pos=-30; 
-				        ltp_pos=new Point(-30,500);
-				        obltp_pos=new Point(-50,490);break;
+				case 2: x_pos=-30; y_pos=370; rotation_pos=12.25;
+				        ltp_pos=new Point(-30,370);
+				        obltp_pos=new Point(-250,310);break;
 						
-				case 3: x_pos=-30; y_pos=300; rotation_pos=-30; //ltr_pos=-30; 
+				case 3: x_pos=-30; y_pos=300; rotation_pos=-26.6; 
 				        ltp_pos=new Point(-30,300);
 				        obltp_pos=new Point(-50,310);break;
 						
-				case 4: x_pos=-30; y_pos=250; rotation_pos=-30; //ltr_pos=-90; 
+				case 4: x_pos=-30; y_pos=250; rotation_pos=-26.6; 
 				        ltp_pos=new Point(-30,250);
-				        obltp_pos=new Point(-50,260);break;			        
+				        obltp_pos=new Point(-50,260);break;							
 				
-				//right side positions:		
-				case 5: x_pos=-30; y_pos=550; rotation_pos=-30; //ltr_pos=-30; 
-				        ltp_pos=new Point(-30,550);
-				        obltp_pos=new Point(-50,560);break;
+				case 5: x_pos=-30; y_pos=250; rotation_pos=20;
+				        ltp_pos=new Point(-30,250);
+				        obltp_pos=new Point(-50,243);break;
 						
-				case 6: x_pos=-30; y_pos=550; rotation_pos=-30; //ltr_pos=-30; 
-				        ltp_pos=new Point(-30,550);
-				        obltp_pos=new Point(-50,560);break;
+				//right side positions:				
+				case 6: x_pos=670; y_pos=50; rotation_pos=116.56; 
+				        ltp_pos=new Point(670,50);
+				        obltp_pos=new Point(680,30);break;
 						
-				case 7: x_pos=-30; y_pos=550; rotation_pos=-30; //ltr_pos=-30; 
-				        ltp_pos=new Point(-30,550);
-				        obltp_pos=new Point(-50,560);break;
+				case 7: x_pos=670; y_pos=50; rotation_pos=101.31; 
+				        ltp_pos=new Point(670,50);
+				        obltp_pos=new Point(674,30);break;
 						
-				case 8: x_pos=-30; y_pos=550; rotation_pos=-30; //ltr_pos=-30; 
-				        ltp_pos=new Point(-30,550);
-				        obltp_pos=new Point(-50,560);break;
+				case 8: x_pos=500; y_pos=-40; rotation_pos=90;  
+				        ltp_pos=new Point(500,-40);
+				        obltp_pos=new Point(500,-50);break;
+						
+				case 9: x_pos=490; y_pos=-40; rotation_pos=116.56;  
+				        ltp_pos=new Point(490,-40);
+				        obltp_pos=new Point(500,-60);break;
+				
+				case 10:x_pos=670; y_pos=200; rotation_pos=153.4; 
+				        ltp_pos=new Point(670,200);
+				        obltp_pos=new Point(680,195);break;		
 				
 			    	 
 			}		
@@ -773,11 +780,11 @@
 		function init_pause_button()
 		{
 			pause_btn = (SimpleButton)(bck.getChildByName("pause_btn"));
-		    pause_btn.addEventListener(MouseEvent.MOUSE_DOWN, stopBoats);
+		    pause_btn.addEventListener(MouseEvent.MOUSE_DOWN, pauseBoats);
 		}
 		
 		//Stop all boats
-		function stopBoats(event:MouseEvent)
+		function pauseBoats(event:MouseEvent)
 		{			
 			if (!paused)
 			for(var i:Number=0; i<all_boats.length; i++)
