@@ -595,9 +595,9 @@
 			points_number++;
 			switch(points_number)
 			{
-			    case 10: stop_boat_push_timer(); start_boat_push_timer(7); break;
-			    case 20: stop_boat_push_timer(); start_boat_push_timer(4); break;
-			    case 30: stop_boat_push_timer(); start_boat_push_timer(1); break;
+			    case 20: stop_boat_push_timer(); start_boat_push_timer(9); break;
+			    case 40: stop_boat_push_timer(); start_boat_push_timer(8); break;
+			    case 60: stop_boat_push_timer(); start_boat_push_timer(7); break;
 				//case 20: stop_boat_push_timer(); start_boat_push_timer(9); break;
 			    //case 40: stop_boat_push_timer(); start_boat_push_timer(8); break;
 			    //case 60: stop_boat_push_timer(); start_boat_push_timer(7); break;
@@ -676,7 +676,7 @@
 			
 			var x_pos, y_pos, rotation_pos, ltr_pos:Number;
 			var ltp_pos, obltp_pos:Point;
-			pos=10;
+			//pos=6;
 			switch(pos)
 			{
 				//left side positions:		
@@ -701,7 +701,7 @@
 				        obltp_pos=new Point(-50,243);break;
 						
 				//right side positions:				
-				case 6: x_pos=688; y_pos=18; rotation_pos=116.56; 
+				case 6: x_pos=688; y_pos=18; rotation_pos=104.036; 
 				        ltp_pos=new Point(688,18);
 				        obltp_pos=new Point(690,10);break;
 						
@@ -717,8 +717,8 @@
 				        ltp_pos=new Point(490,-40);
 				        obltp_pos=new Point(500,-60);break;
 				
-				case 10:x_pos=690; y_pos=190; rotation_pos=153.4; 
-				        ltp_pos=new Point(690,190);
+				case 10:x_pos=700; y_pos=185; rotation_pos=153.4; 
+				        ltp_pos=new Point(700,185);
 				        obltp_pos=new Point(710,180);break;		
 				
 			    	 
