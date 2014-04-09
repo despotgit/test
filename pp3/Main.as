@@ -44,7 +44,8 @@
 		var boats_positions:Array; 
 		
 		//Timer for pushing new boats
-		var boatPushTimer:Timer;		
+		var boatPushTimer:Timer;	
+        var boatPushTimerDelay:Number;
 		
 		//Points textbox and points var
 		var points:TextField;
@@ -60,6 +61,7 @@
 		
 		//pause button
 		var pause_btn:SimpleButton;
+		var pauseOverlay:PauseOverlay;
 		
 		//pause variable
 		var paused:Boolean=false;
@@ -77,8 +79,7 @@
 		var gameOver:GameOver;
 		
 		public function Main()
-		{												
-		    
+		{   
 		    var swfStage:Stage = this.stage; 
             swfStage.scaleMode = StageScaleMode.NO_SCALE; 			
 			
@@ -92,17 +93,18 @@
 			dock5 = (Dock5)(getChildByName("dock5_mc"));
 			dock6 = (Dock6)(getChildByName("dock6_mc"));			
 			
-			init_background();         //initialize the background
-			init_left_coast();         //initialize left coast	
-			init_upper_coast();        //initialize upper coast
-			init_lower_coast();        //initialize lower coast	
-			init_island_coast();       //initialize island in the middle
-			init_docks();              //initialize docks
-			init_boats();              //initialize boats			
-			init_score();              //initialize points	
-			init_pause_button();              //initialize points
+			init_background();            //initialize the background
+			init_left_coast();            //initialize left coast	
+			init_upper_coast();           //initialize upper coast
+			init_lower_coast();           //initialize lower coast	
+			init_island_coast();          //initialize island in the middle
+			init_docks();                 //initialize docks
+			init_boats();                 //initialize boats			
+			init_score();                 //initialize points	
+			init_pause_system();          //initialize pause
 			
-			add_new_boat(null);        //Add the first boat to the scene
+			add_new_boat(null);           //Add the first boat to the scene
+			boatPushTimerDelay=10;
 			start_boat_push_timer(10);    //initialize timer for introducing new boats to the map 
 			trace("After inits");
 			
@@ -593,25 +595,32 @@
 		function increment_score():void
 		{
 			points_number++;
+			adjustBoatPushTimer();
+			
+		}
+		
+		//Adjusts the speed of boat push timer, if needed
+		function adjustBoatPushTimer():void
+		{
+			//if(points_number%20==0)  PUT THIS AS A PRECONDITION FOR BELOW CHECK, FOR SPEEDUP OF CODE 
+			//EXECUTION
 			switch(points_number)
 			{
-			    case 20: stop_boat_push_timer(); start_boat_push_timer(9); break;
-			    case 40: stop_boat_push_timer(); start_boat_push_timer(8); break;
-			    case 60: stop_boat_push_timer(); start_boat_push_timer(7); break;
-				//case 20: stop_boat_push_timer(); start_boat_push_timer(9); break;
-			    //case 40: stop_boat_push_timer(); start_boat_push_timer(8); break;
-			    //case 60: stop_boat_push_timer(); start_boat_push_timer(7); break;
-			    case 80: stop_boat_push_timer(); start_boat_push_timer(6); break;
-			    case 100: stop_boat_push_timer(); start_boat_push_timer(5); break;
-			    case 120: stop_boat_push_timer(); start_boat_push_timer(4); break;
-			    case 140: stop_boat_push_timer(); start_boat_push_timer(3); break;
-			    case 160: stop_boat_push_timer(); start_boat_push_timer(2); break;
-			    case 180: stop_boat_push_timer(); start_boat_push_timer(1); break;
-			    case 200: stop_boat_push_timer(); start_boat_push_timer(0.8); break;
-			    case 220: stop_boat_push_timer(); start_boat_push_timer(0.7); break;
-			    case 240: stop_boat_push_timer(); start_boat_push_timer(0.6); break;
-			    case 260: stop_boat_push_timer(); start_boat_push_timer(0.5); break;
-			}
+			    case 20: stop_boat_push_timer(); start_boat_push_timer(9); boatPushTimerDelay=9; break;
+			    case 40: stop_boat_push_timer(); start_boat_push_timer(8); boatPushTimerDelay=8; break;
+			    case 60: stop_boat_push_timer(); start_boat_push_timer(7); boatPushTimerDelay=7; break;				
+			    case 80: stop_boat_push_timer(); start_boat_push_timer(6); boatPushTimerDelay=6; break;
+			    case 100: stop_boat_push_timer(); start_boat_push_timer(5); boatPushTimerDelay=5; break;
+			    case 120: stop_boat_push_timer(); start_boat_push_timer(4); boatPushTimerDelay=4; break;
+			    case 140: stop_boat_push_timer(); start_boat_push_timer(3); boatPushTimerDelay=3; break;
+			    case 160: stop_boat_push_timer(); start_boat_push_timer(2); boatPushTimerDelay=2; break;
+			    case 180: stop_boat_push_timer(); start_boat_push_timer(1); boatPushTimerDelay=1; break;
+			    case 200: stop_boat_push_timer(); start_boat_push_timer(0.8); boatPushTimerDelay=0.8; break;
+			    case 220: stop_boat_push_timer(); start_boat_push_timer(0.7); boatPushTimerDelay=0.7; break;
+			    case 240: stop_boat_push_timer(); start_boat_push_timer(0.6); boatPushTimerDelay=0.6; break;
+			    case 260: stop_boat_push_timer(); start_boat_push_timer(0.5); boatPushTimerDelay=0.5; break;
+			}		
+			
 		}
 		
 		//Do both above
@@ -622,12 +631,19 @@
   			
 		}
 		
-		//This function starts the timer for the adding of new boats
+		//This function starts the timer for adding of new boats
 		function start_boat_push_timer(t:Number):void
 		{
 			boatPushTimer = new Timer(t*1000);
 			boatPushTimer.addEventListener(TimerEvent.TIMER, add_new_boat);			
 			boatPushTimer.start();
+		}
+		
+		//This function will stop the timer for adding new boats
+		function stop_boat_push_timer():void
+		{
+			boatPushTimer.stop();
+			boatPushTimer.removeEventListener(TimerEvent.TIMER, add_new_boat);
 		}
 		
 		//This will generate and push new boat to the stage every so seconds
@@ -738,11 +754,7 @@
 			return boatie;
 		}
 		
-		//This function will stop the timer for adding new boats
-		function stop_boat_push_timer():void
-		{
-			boatPushTimer.stop();
-		}
+		
 		
 		//Deleting the boat from stage and from the boats array
 		function delete_boat(b:BoatController):void
@@ -777,28 +789,42 @@
 		}
 		
 		//Register action for pause button
-		function init_pause_button()
+		function init_pause_system()
 		{
 			pause_btn = (SimpleButton)(bck.getChildByName("pause_btn"));
-		    pause_btn.addEventListener(MouseEvent.MOUSE_DOWN, pauseBoats);
+		    pause_btn.addEventListener(MouseEvent.MOUSE_DOWN, pauseUnpauseGame);
+			pauseOverlay=(PauseOverlay)(getChildByName("pauseCover"));
+			setChildIndex(this.pauseOverlay, numChildren-1);
+			pauseOverlay.visible=0;
+			
 		}
 		
 		//Stop all boats
-		function pauseBoats(event:MouseEvent)
+		function pauseUnpauseGame(event:MouseEvent)
 		{			
 			if (!paused)
-			for(var i:Number=0; i<all_boats.length; i++)
-			{
+		    {
+			  stop_boat_push_timer();	
+			  for(var i:Number=0; i<all_boats.length; i++)
+			  {				
 				var b:BoatController=all_boats[i];
 			    b.stopTimeline();		
 				paused=true;
-			}
+			  }
+			  
+			  setChildIndex(this.pauseOverlay, numChildren-1);
+			  pauseOverlay.visible=1;
+			}			
 			else 
-			for(var i:Number=0; i<all_boats.length; i++)
 			{
-				var b:BoatController=all_boats[i];
+			  start_boat_push_timer(boatPushTimerDelay);	
+			  for(var i:Number=0; i<all_boats.length; i++)
+			  {			    
+			    var b:BoatController=all_boats[i];
 			    b.startTimeline();		
-				paused=false;
+			    paused=false;
+			  }
+			  pauseOverlay.visible=0;
 			}
 			
 			
