@@ -105,15 +105,13 @@
 			
 			add_new_boat(null);           //Add the first boat to the scene
 			boatPushTimerDelay=10;
-			start_boat_push_timer(10);    //initialize timer for introducing new boats to the map 
+			start_boat_push_timer(1);    //initialize timer for introducing new boats to the map 
 			trace("After inits");
 			
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
 			stage.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp); 			
 						
 			addEventListener(Event.ENTER_FRAME, check_boats_collisions_and_proximites);		
-						
-			
 		}			
 		
 		
@@ -782,13 +780,10 @@
 				bo.stop_animating();			    					
 		    }
 			
-			gameOver=new GameOver();
+			gameOver=new GameOver(this);
 			gameOver.x=310;
 			gameOver.y=270;
-			addChild(gameOver);			
-			
-			
-			
+			addChild(gameOver);				
 			
 			
 		}
@@ -800,8 +795,7 @@
 		    pause_btn.addEventListener(MouseEvent.MOUSE_DOWN, pauseUnpauseGame);
 			pauseOverlay=(PauseOverlay)(getChildByName("pauseCover"));
 			setChildIndex(this.pauseOverlay, numChildren-1);
-			pauseOverlay.visible=false;
-			
+			pauseOverlay.visible=false;			
 		}
 		
 		//Stop all boats
