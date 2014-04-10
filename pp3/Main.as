@@ -60,7 +60,7 @@
 		var dock6:Dock6;
 		
 		//pause button
-		var pause_btn:SimpleButton;
+		var pause_btn:PauseBtn;
 		var pauseOverlay:PauseOverlay;
 		
 		//pause variable
@@ -764,7 +764,7 @@
 			for(var i:Number=0; i<all_boats.length; i++)
 			{
 				var b2:BoatController=all_boats[i];
-				if(b2==b);
+				if(b2==b){}
 				else new_all_boats.push(b2);
 				
 			}
@@ -786,16 +786,21 @@
 			gameOver.x=310;
 			gameOver.y=270;
 			addChild(gameOver);			
+			
+			
+			
+			
+			
 		}
 		
 		//Register action for pause button
 		function init_pause_system()
 		{
-			pause_btn = (SimpleButton)(bck.getChildByName("pause_btn"));
+			pause_btn = (PauseBtn)(bck.getChildByName("pause_btn"));
 		    pause_btn.addEventListener(MouseEvent.MOUSE_DOWN, pauseUnpauseGame);
 			pauseOverlay=(PauseOverlay)(getChildByName("pauseCover"));
 			setChildIndex(this.pauseOverlay, numChildren-1);
-			pauseOverlay.visible=0;
+			pauseOverlay.visible=false;
 			
 		}
 		
@@ -814,6 +819,7 @@
 			  
 			  setChildIndex(this.pauseOverlay, numChildren-1);
 			  pauseOverlay.visible=1;
+			  pause_btn.switchToPausedText();
 			}			
 			else 
 			{
@@ -825,6 +831,7 @@
 			    paused=false;
 			  }
 			  pauseOverlay.visible=0;
+			  pause_btn.switchToPauseText();
 			}
 			
 			
