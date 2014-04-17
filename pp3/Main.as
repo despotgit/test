@@ -801,6 +801,7 @@
 		//Stop all boats
 		function pauseUnpauseGame(event:MouseEvent)
 		{			
+		    if(!game_on) return;
 			if (!paused)
 		    {
 			  stop_boat_push_timer();	
