@@ -78,6 +78,10 @@
 		//game over animation
 		var gameOver:GameOver;
 		
+		//Top10 textbox
+		var globalTop10List_txt:TextField;
+		var friendsTop10List_txt:TextField;
+		
 		public function Main()
 		{   
 		    var swfStage:Stage = this.stage; 
@@ -102,10 +106,11 @@
 			init_boats();                 //initialize boats			
 			init_score();                 //initialize points	
 			init_pause_system();          //initialize pause
+			//initTop10System();            //initialize top10 lists
 			
 			add_new_boat(null);           //Add the first boat to the scene
-			boatPushTimerDelay=10;
-			start_boat_push_timer(1);    //initialize timer for introducing new boats to the map 
+			boatPushTimerDelay=3;
+			start_boat_push_timer(boatPushTimerDelay);    //initialize timer for introducing new boats to the map 
 			trace("After inits");
 			
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
@@ -130,6 +135,7 @@
 		//Initialize points and points text field
 		function init_score():void
 		{
+			trace("in init_score");
 			points=(TextField)(getChildByName("txt_points"));			
 			var format1:TextFormat = new TextFormat();						
 			format1.bold=true;
@@ -227,13 +233,39 @@
 		
 		//Initialize boats on screen
 		function init_boats():void
-		{			
-						
-            all_boats=new Array();						
-						
-			
-									
+		{									
+            all_boats=new Array();														
 		}							
+		
+		//Register action for pause button
+		function init_pause_system()
+		{
+			pause_btn = (PauseBtn)(bck.getChildByName("pause_btn"));
+		    pause_btn.addEventListener(MouseEvent.MOUSE_DOWN, pauseUnpauseGame);
+			pauseOverlay=(PauseOverlay)(getChildByName("pauseCover"));
+			setChildIndex(this.pauseOverlay, numChildren-1);
+			pauseOverlay.visible=false;			
+		}
+		
+		//Init the top10 system
+		function initTop10System()		         
+		{
+		    //trace("in init_score");
+			globalTop10List_txt=(TextField)(getChildByName("global_top10_txt"));
+			friendsTop10List_txt=(TextField)(getChildByName("friends_top10_txt"));
+			var format:TextFormat = new TextFormat();						
+			format.bold=true;
+			format.size=30;
+			format.color=0xFFFFFF;			
+
+            globalTop10List_txt.defaultTextFormat=format;
+			//globalTop10List_txt.htmlText=(String)("<b>"+points_number+"</b>");	
+			
+			friendsTop10List_txt.defaultTextFormat=format;
+			//friendsTop10List_txt.htmlText=(String)("<b>"+points_number+"</b>");
+		        	
+		        	
+		}
 		
 		//Checking collisions and proximities between all boats on screen
 		private function check_boats_collisions_and_proximites(ev:Event):void
@@ -586,6 +618,7 @@
 		//Refresh points on screen
 		function refresh_points():void
 		{
+			trace("in refresh_points");
 			points.htmlText=(String)("<b>"+points_number+"</b>");			
 		}
 		
@@ -738,8 +771,8 @@
 			    	 
 			}		
 			
-			trace("x_pos: "+x_pos);
-			trace("y_pos: "+y_pos);
+			//trace("x_pos: "+x_pos);
+			//trace("y_pos: "+y_pos);
 			
 			boatie.x=x_pos;
 			boatie.y=y_pos;				
@@ -788,15 +821,7 @@
 			
 		}
 		
-		//Register action for pause button
-		function init_pause_system()
-		{
-			pause_btn = (PauseBtn)(bck.getChildByName("pause_btn"));
-		    pause_btn.addEventListener(MouseEvent.MOUSE_DOWN, pauseUnpauseGame);
-			pauseOverlay=(PauseOverlay)(getChildByName("pauseCover"));
-			setChildIndex(this.pauseOverlay, numChildren-1);
-			pauseOverlay.visible=false;			
-		}
+		
 		
 		//Stop all boats
 		function pauseUnpauseGame(event:MouseEvent)
@@ -813,7 +838,7 @@
 			  }
 			  
 			  setChildIndex(this.pauseOverlay, numChildren-1);
-			  pauseOverlay.visible=1;
+			  pauseOverlay.visible=true;
 			  pause_btn.switchToPausedText();
 			}			
 			else 
@@ -825,12 +850,27 @@
 			    b.startTimeline();		
 			    paused=false;
 			  }
-			  pauseOverlay.visible=0;
+			  pauseOverlay.visible=false;
 			  pause_btn.switchToPauseText();
-			}
+			}			
+		}
+		
+		function get_score():Number
+		{
+			return points_number;
 			
-			
-			
+		}
+		
+		public function setGlobalTop10ListText(s:String)
+		{	     		
+		    globalTop10List_txt.htmlText=(String)("<b>"+s+"</b>");	
+		    
+		}
+		
+		function setFriendsTop10ListText(s:String)
+		{			
+		    friendsTop10List_txt.htmlText=(String)("<b>"+s+"</b>");	
+		        	
 		}
 
 	}

@@ -417,7 +417,7 @@
 					 
 					   timeline.append(regularTween);					
 					
-					   var lp:Point=get_last_trajectory_point();
+					   lp=get_last_trajectory_point();
 				       set_one_before_last_trajectory_point(lp.x,lp.y);
 			           set_last_trajectory_point(par_x, par_y);						   
 					
